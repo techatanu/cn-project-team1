@@ -214,7 +214,7 @@ We used our **own team CA** instead of a bare self-signed certificate, so every 
 
 Also shown: Mac 1 `curl -v https://app.team1.test` (TLS 1.3, verify ok, HTTP/2 200), Chrome opening `https://app.team1.test/api/status` by name with no warning, `curl -sI --http1.1` → `HTTP/1.1 200 OK` and `--http2` → `HTTP/2 200`. **HTTP/3** (QUIC over UDP) is explanation-only, as the spec allows.
 
-**Handshake in words:** ClientHello (supported versions and ciphers, SNI, ALPN, key share) → ServerHello (chosen cipher) → Certificate (server proves its identity with a chain to a CA the client trusts) → Key Exchange (ECDHE, so both sides derive the same session keys) → ChangeCipherSpec / Finished (everything after this is encrypted). In TLS 1.3 the certificate itself is already encrypted, which is why we also captured a TLS 1.2 session to see the Certificate in clear.
+**Handshake in words:** ClientHello (supported versions and ciphers, SNI, ALPN, key share) → ServerHello (chosen cipher; in our capture 0xcca8 for TLS 1.2 and 0x1303 for TLS 1.3) → Certificate (server proves its identity with a chain to a CA the client trusts) → Key Exchange (ECDHE, so both sides derive the same session keys) → ChangeCipherSpec / Finished (everything after this is encrypted). In TLS 1.3 the certificate itself is already encrypted, which is why we also captured a TLS 1.2 session to see the Certificate in clear.
 
 ### Task F — HTTP caching
 
@@ -249,17 +249,17 @@ HTTP/2 304            (x-backend: A at 11:42:31 and 11:45:45, x-backend: B at 11
 
 ## 6. Task G — Packet capture analysis
 
-Captured on **Mac 3, Wi-Fi en0**, no capture filter. Saved as **`phase1_full_flow.pcapng` (683 packets)**. A second file holds an nginx→backend stream (`bonus_nginx_backend_not_encrypted.pcapng`). Traffic: DNS cache flushed, then `/usr/bin/curl -v --tls-max 1.2 …/api/status`, then TLS 1.3, then a 4-request loop ([`evidence/G-capture`](../evidence/G-capture)).
+Captured on **Mac 3, Wi-Fi en0**, no capture filter. Saved as **[`phase1_full_flow.pcapng`](../evidence/G-capture/phase1_full_flow.pcapng) (683 packets, 483 s)**. Because Mac 3 is both the client and the backend host, the same file also holds all six nginx→backend connections, in plain text. A machine-readable summary made with `tshark` is in [`phase1_full_flow_tshark_summary.txt`](../evidence/G-capture/phase1_full_flow_tshark_summary.txt). Traffic: DNS cache flushed, then `/usr/bin/curl -v --tls-max 1.2 …/api/status`, then TLS 1.3, then a 4-request loop ([`evidence/G-capture`](../evidence/G-capture)).
 
 | Layer / event | Display filter | What we found |
 |---|---|---|
-| **DNS** | `dns.qry.name contains "team1.test"` | Pkt 239 (t = 101.203 s) standard query `0x647b` A app.team1.test, UDP **50215 → 53**. Pkt 240 (t = 101.214 s) response **A 10.7.16.45**. Second lookup pkts 392/393 (`0x5868`). Conversations: all 210 UDP conversations of Mac 3 go to 10.7.28.177:53. The team1.test ones use source ports 50215 and 51388 |
+| **DNS** | `dns.qry.name contains "team1.test"` | Pkt 239 (t = 101.203 s) standard query `0x647b` A app.team1.test, UDP **50215 → 53**. Pkt 240 (t = 101.214 s) response **A 10.7.16.45, TTL 60**, authoritative flag set. Second lookup pkts 392/393 (`0x5868`). Conversations: all 210 UDP conversations of Mac 3 go to 10.7.28.177:53. The team1.test ones use source ports 50215 and 51388 |
 | **ARP** | — | Pkt 241 "Who has 10.7.16.45? Tell 10.7.7.111", pkt 242 "10.7.16.45 is at 12:32:e6:75:62:df": IP → MAC before the first frame to the edge |
 | **TCP handshake** | `tcp.flags.syn==1`, `tcp.stream eq 0` | Pkt 243 **SYN** 59200 → 443, Seq=0, Win=65535, MSS=1460, WS=64, SACK_PERM · pkt 244 SYN retransmission · pkt 245 **SYN-ACK** Seq=0 Ack=1 · pkt 246 duplicate SYN-ACK · pkt 247 **ACK** Seq=1 Ack=1 · pkt 248 Dup ACK. Only then does TLS start (pkt 249) |
 | **TLS 1.2** | `tcp.stream eq 0 && tls` | 249 Client Hello (SNI=app.team1.test, 46 cipher suites, ALPN h2/http/1.1) · 252 **Server Hello, Certificate, Server Key Exchange, Server Hello Done** (`tls.handshake.type == 11` → only pkt 252) · 254 Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message · 256 Change Cipher Spec, Encrypted Handshake Message · 258–278 Application Data · 281 Encrypted Alert |
 | **TLS 1.3** | `tcp.stream eq 2 && tls` | Pkt 399 Client Hello from port **59239** (TLS 1.3 suites incl. TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256) · 402 Server Hello, Change Cipher Spec, Application Data. The certificate is no longer visible because TLS 1.3 encrypts it |
 | **Encrypted payload** | `tls.record.content_type == 23` | Pkts 258, 259, 260, 262, 266, 278 "Application Data". The hex pane shows unreadable bytes, so the HTTP headers that `curl -v` prints are not visible on the wire |
-| **Edge → backend** | `tcp.port == 3001 or tcp.port == 3002`, Follow TCP Stream | Pkt 265 nginx SYN 10.7.16.45:55239 → 10.7.7.111:3001. Follow TCP Stream shows **plain text**: `GET /api/status HTTP/1.1`, `Host: app.team1.test`, `X-Real-IP: 10.7.7.111`, `X-Forwarded-Proto: https` → `HTTP/1.0 200 OK`, `Server: TeamBackend/1.0 Python/3.12.4`, `X-Backend: A`. This proves TLS terminates at the edge |
+| **Edge → backend** | `tcp.port == 3001 or tcp.port == 3002`, Follow TCP Stream | Pkt 265 nginx SYN 10.7.16.45:55239 → 10.7.7.111:3001; request pkt 269, response pkt 274. Follow TCP Stream shows **plain text**: `GET /api/status HTTP/1.1`, `Host: app.team1.test`, `X-Real-IP: 10.7.7.111`, `X-Forwarded-Proto: https` → `HTTP/1.0 200 OK`, `Server: TeamBackend/1.0 Python/3.12.4`, `X-Backend: A`. The six backend responses (pkts 274, 425, 505, 545, 585, 626) carry **X-Backend A, B, A, B, A, B**. This proves TLS terminates at the edge |
 | **Load balancing** | Statistics → Conversations → TCP (12) | Six client→443 connections (source ports 59200, 59239, 59247–59250) and six nginx→backend connections (55239, 55245–55249) **alternating 3001 / 3002** |
 | **Teardown** | `tcp.stream eq 0` | Pkts 282–286 FIN/ACK in both directions (client Seq=524, Ack=1713) |
 
@@ -324,7 +324,7 @@ The table gives the procedure we follow for each scenario and the result we expe
 | D – nginx round-robin, A/B alternation proven | ✅ |
 | E – HTTPS with team CA, trusted on all clients, no `-k`, HTTP/1.1 + HTTP/2 | ✅ |
 | F – `Cache-Control`, `ETag`, 304, disk-cache hit | ✅ |
-| G – DNS / TCP / TLS / encrypted data / ports / LB captured | ✅ (one screenshot outstanding: pkt 240 TTL) |
+| G – DNS / TCP / TLS / encrypted data / ports / LB captured | ✅ |
 | 6.3 – Five failure demonstrations | ⬜ to record |
 | Faculty confirmation of team number (`team1`) and the 3-machine role split | ⬜ |
 

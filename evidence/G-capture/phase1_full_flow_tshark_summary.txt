@@ -1,0 +1,72 @@
+# tshark summary of phase1_full_flow.pcapng (683 packets, captured on Mac 3 en0, 2 Oct 2026)
+# generated with Wireshark's tshark on Mac 2, 3 Oct 2026
+
+## DNS for team1.test  (frame, time, src port, dst port, id, response, authoritative, answer, TTL)
+239	101.203245000	50215	53	0x647b	False			
+240	101.213510000	53	50215	0x647b	True	True	10.7.16.45	60
+392	321.840557000	51388	53	0x5868	False			
+393	321.893533000	53	51388	0x5868	True	True	10.7.16.45	60
+
+## ARP before first TCP frame
+  241 101.214369 Apple_c2:3a:02 → Broadcast    ARP 42 Who has 10.7.16.45? Tell 10.7.7.111
+  242 101.217157 12:32:e6:75:62:df → Apple_c2:3a:02 ARP 42 10.7.16.45 is at 12:32:e6:75:62:df
+
+## TCP stream 0: handshake + TLS 1.2 (first 16 frames)
+  243 101.217209   10.7.7.111 → 10.7.16.45   TCP 78 59200 → 443 [SYN] Seq=0 Win=65535 Len=0 MSS=1460 WS=64 TSval=822463238 TSecr=0 SACK_PERM
+  244 101.399031   10.7.7.111 → 10.7.16.45   TCP 78 [TCP Retransmission] 59200 → 443 [SYN] Seq=0 Win=65535 Len=0 MSS=1460 WS=64 TSval=822463423 TSecr=0 SACK_PERM
+  245 101.423357   10.7.16.45 → 10.7.7.111   TCP 78 443 → 59200 [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1460 WS=64 TSval=1943071393 TSecr=822463238 SACK_PERM
+  246 101.423359   10.7.16.45 → 10.7.7.111   TCP 78 [TCP Retransmission] 443 → 59200 [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1460 WS=64 TSval=1943071394 TSecr=822463423 SACK_PERM
+  247 101.423471   10.7.7.111 → 10.7.16.45   TCP 66 59200 → 443 [ACK] Seq=1 Ack=1 Win=131712 Len=0 TSval=822463448 TSecr=1943071393
+  248 101.423542   10.7.7.111 → 10.7.16.45   TCP 66 [TCP Dup ACK 247#1] 59200 → 443 [ACK] Seq=1 Ack=1 Win=131712 Len=0 TSval=822463448 TSecr=1943071393
+  249 101.428441   10.7.7.111 → 10.7.16.45   TLSv1 297 Client Hello (SNI=app.team1.test)
+  250 101.429695   10.7.16.45 → 10.7.7.111   TCP 66 [TCP Window Update] 443 → 59200 [ACK] Seq=1 Ack=1 Win=131776 Len=0 TSval=1943071402 TSecr=822463448
+  251 101.439676   10.7.16.45 → 10.7.7.111   TCP 66 443 → 59200 [ACK] Seq=1 Ack=232 Win=131584 Len=0 TSval=1943071409 TSecr=822463453
+  252 101.444998   10.7.16.45 → 10.7.7.111   TLSv1.2 1447 Server Hello, Certificate, Server Key Exchange, Server Hello Done
+  253 101.445089   10.7.7.111 → 10.7.16.45   TCP 66 59200 → 443 [ACK] Seq=232 Ack=1382 Win=130368 Len=0 TSval=822463469 TSecr=1943071414
+  254 101.481808   10.7.7.111 → 10.7.16.45   TLSv1.2 151 Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message
+  255 101.489889   10.7.16.45 → 10.7.7.111   TCP 66 443 → 59200 [ACK] Seq=1382 Ack=317 Win=131520 Len=0 TSval=1943071461 TSecr=822463505
+  256 101.489890   10.7.16.45 → 10.7.7.111   TLSv1.2 109 Change Cipher Spec, Encrypted Handshake Message
+  257 101.489997   10.7.7.111 → 10.7.16.45   TCP 66 59200 → 443 [ACK] Seq=317 Ack=1425 Win=131008 Len=0 TSval=822463514 TSecr=1943071462
+  258 101.490588   10.7.7.111 → 10.7.16.45   TLSv1.2 151 Application Data
+
+## TLS handshake frames  (frame, stream, handshake types, SNI, cipher chosen by server)
+249	0	1	app.team1.test	(client offers list)
+252	0	2,11,12,14		0xcca8
+399	2	1	app.team1.test	(client offers list)
+402	2	2		0x1303
+479	4	1	app.team1.test	(client offers list)
+482	4	2		0x1303
+520	6	1	app.team1.test	(client offers list)
+523	6	2		0x1303
+560	8	1	app.team1.test	(client offers list)
+562	8	2		0x1303
+602	10	1	app.team1.test	(client offers list)
+604	10	2		0x1303
+# 0xcca8 = TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (TLS 1.2) · 0x1303 = TLS_CHACHA20_POLY1305_SHA256 (TLS 1.3)
+
+## Edge -> backend plain HTTP (shows TLS terminates at nginx; X-Backend alternates)
+274	101.524428000	3001	55239	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:18:43 GMT,X-Backend: A,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+425	321.992133000	3002	55245	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:22:23 GMT,X-Backend: B,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+505	386.457230000	3001	55246	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:23:28 GMT,X-Backend: A,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+545	386.625163000	3002	55247	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:23:28 GMT,X-Backend: B,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+585	386.693268000	3001	55248	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:23:28 GMT,X-Backend: A,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+626	386.757543000	3002	55249	Server: TeamBackend/1.0 Python/3.12.4,Date: Fri, 02 Oct 2026 12:23:28 GMT,X-Backend: B,Cache-Control: no-store,Content-Type: application/json,Content-Length: 76
+
+================================================================================
+TCP Conversations
+Filter:<No Filter>
+                                                           |       <-      | |       ->      | |     Total     |    Relative    |   Duration   |
+                                                           | Frames  Bytes | | Frames  Bytes | | Frames  Bytes |      Start     |              |
+10.7.7.111:59200           <-> 10.7.16.45:443                  16 2792 bytes      17 1669 bytes      33 4461 bytes   101.217209000         0.3229
+10.7.7.111:59239           <-> 10.7.16.45:443                  17 3473 bytes      16 1667 bytes      33 5140 bytes   321.894654000         0.1194
+10.7.7.111:59249           <-> 10.7.16.45:443                  15 3341 bytes      15 1601 bytes      30 4942 bytes   386.652333000         0.0579
+10.7.7.111:59247           <-> 10.7.16.45:443                  15 3329 bytes      14 1535 bytes      29 4864 bytes   386.397533000         0.0756
+10.7.7.111:59248           <-> 10.7.16.45:443                  15 3329 bytes      13 1469 bytes      28 4798 bytes   386.477477000         0.1636
+10.7.7.111:59250           <-> 10.7.16.45:443                  13 3197 bytes      14 1535 bytes      27 4732 bytes   386.718152000         0.0546
+10.7.16.45:55239           <-> 10.7.7.111:3001                  6 670 bytes       6 573 bytes      12 1243 bytes   101.499711000         0.0313
+10.7.16.45:55245           <-> 10.7.7.111:3002                  6 670 bytes       6 573 bytes      12 1243 bytes   321.959242000         0.0412
+10.7.16.45:55246           <-> 10.7.7.111:3001                  6 670 bytes       6 573 bytes      12 1243 bytes   386.445996000         0.0182
+10.7.16.45:55247           <-> 10.7.7.111:3002                  6 670 bytes       6 573 bytes      12 1243 bytes   386.516147000         0.1160
+10.7.16.45:55248           <-> 10.7.7.111:3001                  6 670 bytes       6 573 bytes      12 1243 bytes   386.684395000         0.0163
+10.7.16.45:55249           <-> 10.7.7.111:3002                  6 670 bytes       6 573 bytes      12 1243 bytes   386.750824000         0.0139
+================================================================================

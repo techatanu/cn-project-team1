@@ -1,3 +1,6 @@
 # G – Capture
-Put the capture files here: phase1_full_flow.pcapng (683 packets) and bonus_nginx_backend_not_encrypted.pcapng (rename: ':' is not allowed in many file systems).
-Present screenshots: p15, p17–p22. To add: packet 240 expanded (Answers → TTL 60).
+- `phase1_full_flow.pcapng`: 683 packets, captured on Mac 3 en0. It contains the DNS lookups, the TCP and TLS 1.2/1.3 handshakes, the encrypted application data, and all six nginx→backend plain-HTTP connections.
+- `phase1_full_flow_tshark_summary.txt`: the key frames, extracted with tshark (DNS TTL 60, ARP, handshake, ciphers, X-Backend A/B/A/B/A/B, conversations).
+- Screenshots: p15, p17–p22.
+
+The separate "bonus" file we received was a byte-identical copy of phase1_full_flow.pcapng, so it is not included. Nothing is lost: the plain-HTTP edge→backend streams are in the main capture (filter `tcp.port == 3001 or tcp.port == 3002`, then Follow → TCP Stream).

@@ -11,5 +11,5 @@ exported directly from Mac 2. Status: ✅ present · ⬜ still to add.
 | [D-loadbalancing](D-loadbalancing) | D – LB | full nginx access log (`$remote_addr -> $upstream_addr`) | ⬜ screenshot of the 6-request A/B loop |
 | [E-tls](E-tls) | E – TLS | `openssl verify` OK; CA trust; `curl -v` TLS 1.2 & TLS 1.3 "SSL certificate verify ok" | ⬜ browser padlock / certificate viewer screenshot; ⬜ `--http1.1` vs `--http2` output |
 | [F-caching](F-caching) | F – Caching | `curl -I` cache headers + ETag; 304 from A and B; DevTools 304 and `(disk cache)`; log 200/304 | — |
-| [G-capture](G-capture) | G – Capture | DNS, SYN/SYN-ACK/ACK, TLS 1.2 & 1.3 handshakes, Certificate packet, encrypted Application Data, plain-HTTP edge→backend stream, TCP/UDP Conversations | ⬜ `phase1_full_flow.pcapng` + `bonus_nginx_backend_not_encrypted.pcapng` files (on Mac 3); ⬜ packet 240 expanded showing TTL 60 |
+| [G-capture](G-capture) | G – Capture | DNS, SYN/SYN-ACK/ACK, TLS 1.2 & 1.3 handshakes, Certificate packet, encrypted Application Data, plain-HTTP edge→backend stream, TCP/UDP Conversations | ✅ `phase1_full_flow.pcapng` + tshark summary (TTL 60 in pkt 240 confirmed). ⬜ (optional) screenshot of pkt 240 with Answers expanded |
 | [failures](failures) | 6.3 | accidental wrong-record `dig` (10.7.7.111) | ⬜ all five deliberate demos (see each sub-folder) |
