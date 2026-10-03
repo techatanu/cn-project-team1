@@ -36,3 +36,5 @@ curl -i http://10.7.7.111:3002/api/status
 
 Note: Mac 3 has Anaconda, so plain `curl` there is `/opt/anaconda3/bin/curl`, which does not read the
 macOS Keychain. Use `/usr/bin/curl` for HTTPS tests on Mac 3.
+
+This file was checked line by line against the running copy on Mac 3 (`~/cn-project/backend/backend.py`) on 3 Oct 2026. The two are identical.
