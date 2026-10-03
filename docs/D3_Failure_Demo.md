@@ -3,7 +3,7 @@
 Evidence: [`evidence/failures/3-one-backend-stopped`](../evidence/failures/3-one-backend-stopped)
 (`option_A_terminal_outputs.pdf`, `option_A_outputs.txt` with the matching nginx log lines from Mac 2).
 
-## Answer for the form (copy-paste)
+## Answer for the form
 
 **(1) Which option:** Option A. We stopped one backend: Backend A, the Python process on port 3001 on Mac 3 (10.7.7.111).
 
