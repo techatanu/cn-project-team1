@@ -58,3 +58,5 @@ curl -v https://app.team1.test/api/status
 ```
 
 Private keys are **not** in this repository (see `.gitignore`). They stay on Mac 2 only.
+
+-- End of README.md --
