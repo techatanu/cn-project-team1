@@ -1,0 +1,5 @@
+# never commit private keys or CA serial/CSR files
+*.key
+*.csr
+*.srl
+.DS_Store

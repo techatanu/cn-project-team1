@@ -1,0 +1,10 @@
+$ networksetup -getinfo Wi-Fi   (Mac 2, re-run 3 Oct 2026)
+DHCP Configuration
+IP address: 10.7.16.45
+Subnet mask: 255.255.224.0
+Router: 10.7.0.1
+Client ID: 
+IPv6: Automatic
+IPv6 IP address: none
+IPv6 Router: none
+Wi-Fi ID: 80:a9:97:48:ca:2f

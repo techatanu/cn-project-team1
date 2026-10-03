@@ -1,0 +1,14 @@
+$ openssl verify -CAfile team1-ca.crt app.team1.test.crt
+app.team1.test.crt: OK
+
+$ openssl x509 -in app.team1.test.crt -noout -subject -issuer -dates -ext subjectAltName,extendedKeyUsage,basicConstraints
+subject=C=IN, O=Team1 CN Project, CN=app.team1.test
+issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+notBefore=Oct  2 07:40:15 2026 GMT
+notAfter=Oct  2 07:40:15 2027 GMT
+X509v3 Basic Constraints: 
+    CA:FALSE
+X509v3 Extended Key Usage: 
+    TLS Web Server Authentication
+X509v3 Subject Alternative Name: 
+    DNS:app.team1.test, DNS:api.team1.test
