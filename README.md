@@ -23,6 +23,7 @@ Domain: `app.team1.test`, `api.team1.test` → 10.7.16.45 · Network: Wi-Fi `Ris
 ├── docs/
 │   ├── Phase1_Report.md          ← Architecture document + Phase 1 report
 │   ├── Video_Script.md           ← 3-member demo video script
+│   ├── D3_Failure_Demo.md        ← form D3 answer (Option A) + run sheet
 │   └── diagrams/topology.svg|png ← network topology + request flow
 ├── config/                       ← Configuration bundle
 │   ├── mac1-dns/                 dnsmasq.conf + client DNS setup

@@ -1,4 +1,4 @@
-# Phase 1 Demo Video — Script (3 members, about 10–12 min)
+# Phase 1 Demo Video — Script (3 members, about 10 min)
 
 **Speakers:** **PRINCE** (Mac 1, DNS + client) · **ATANU** (Mac 2, nginx edge) · **SAMBHAV** (Mac 3, backends + Wireshark)
 The script follows the spec's demo sequence (section 8, steps 1–8) and the section numbers of `Phase1_Report.md`.
@@ -12,7 +12,7 @@ The script follows the spec's demo sequence (section 8, steps 1–8) and the sec
    It must be 10.7.28.177 / 10.7.16.45 / 10.7.7.111. If Mac 2 changed → fix dnsmasq. If Mac 3 changed → fix nginx upstream.
 2. Mac 1: `sudo brew services restart dnsmasq`
 3. Mac 3: two Terminal windows → `python3 backend.py A 3001` and `python3 backend.py B 3002`
-4. Mac 2: `nginx -t && nginx` (or `nginx -s reload` if already running). Second window: `tail -f /opt/homebrew/var/log/nginx/team1_access.log`. Third window: `tail -f /opt/homebrew/var/log/nginx/error.log`
+4. Mac 2: `nginx -t && nginx` (or `nginx -s reload` if already running). Second window: `tail -n 0 -f /opt/homebrew/var/log/nginx/team1_access.log`. Third window: `tail -n 0 -f /opt/homebrew/var/log/nginx/error.log`
 5. Mac 1 and Mac 3: `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 6. Terminal font size large (Cmd +). Close unrelated tabs. Open `docs/diagrams/topology.png`.
 7. **Mac 3 always uses `/usr/bin/curl`**, never plain `curl`.
@@ -102,7 +102,7 @@ In cloud terms, Mac 1 is like Route 53, Mac 2 is like an AWS load balancer, and 
 
 *Mac 1:*
 `$ for i in 1 2 3 4 5 6; do curl -s -i https://app.team1.test/api/status | grep -i x-backend; done`
-**PRINCE:** "A, B, A, B, A, B. Same name, same IP, but nginx alternates between the backends."
+**PRINCE:** "Same name and same IP, but the answers come from A and from B. nginx alternates between the backends."
 
 *Mac 2: show the access-log window.*
 **ATANU:** "The nginx log confirms it. Each line shows the client IP and the upstream nginx chose, alternating between port 3001 and port 3002. The client never knows the backend addresses. It only knows the edge."
@@ -146,15 +146,34 @@ In cloud terms, Mac 1 is like Route 53, Mac 2 is like an AWS load balancer, and 
 
 ---
 
-## Scene 9 — Failure demonstrations (all, ~2.5 min) · demo step 8 + spec 6.3
+## Scene 9 — Failure demonstration: Option A, stop one backend (all, ~2 min) · demo step 8 + form D3
 
-### 9a. One backend stopped — our main demo (Option A)
-**PRINCE** (Mac 1): run the 6-request loop → *A B A B A B*
-**SAMBHAV** (Mac 3): press **Ctrl+C** in the Backend A window. "Backend A is stopped."
-**PRINCE:** run the loop again → *only B, all succeed*. "The service keeps working through Backend B."
-**ATANU** (Mac 2): point at the error-log window → *connect() failed (61: Connection refused) … 10.7.7.111:3001*. "nginx tried A, got connection refused, marked it down for 10 seconds and retried on B. The user never saw an error."
-`$ curl http://10.7.7.111:3001` → refused · `$ ping -c 2 10.7.7.111` → works. "The machine is up. Only the process on port 3001 is gone."
-**SAMBHAV:** `$ python3 backend.py A 3001` → wait 10 s → **PRINCE** loop → *A B A B again*.
+The form asks for **one** failure, and we chose Option A. These are the outputs we recorded on 3 Oct 2026, so the video should show the same thing.
+On Mac 2, start the log windows with `tail -n 0 -f …` so old lines don't appear.
+
+**PRINCE** (Mac 1), *before*:
+`$ for i in 1 2 3 4 5 6; do curl -s -i https://app.team1.test/api/status | grep -i x-backend; done` → *A A B A B A*
+**PRINCE:** "Before the failure, both backends answer. Requests go to A and to B."
+**ATANU** (Mac 2): "The access log shows the upstream switching between port 3001 and port 3002."
+
+**SAMBHAV** (Mac 3), *break*: press **Ctrl+C** in the Backend A window → *stopped*
+`$ lsof -nP -iTCP -sTCP:LISTEN | grep -E ":3001|:3002"` → *only `*:3002`*
+**SAMBHAV:** "I stopped Backend A. Only port 3002 is listening now."
+
+**PRINCE**, *after*: run the same loop → *B B B B B B*
+**PRINCE:** "Every response now comes from Backend B, and none of them failed. The user sees no error."
+
+**ATANU** (Mac 2): point at error.log → *connect() failed (61: Connection refused) … upstream: "http://10.7.7.111:3001/api/status"*
+**ATANU:** "nginx tried Backend A and got connection refused. In the access log, one line shows two upstreams, 3001 then 3002: nginx retried the same request on B. Because of `max_fails=1` and `fail_timeout=10s`, it stopped sending traffic to A."
+`$ curl -i http://10.7.7.111:3001/api/status` → *Failed to connect … Couldn't connect to server*
+`$ ping -c 2 10.7.7.111` → *2 packets received, 0% loss*
+**ATANU:** "The machine is still reachable. Only the application on port 3001 is gone. So the failed layer is the application layer on the backend. DNS, TCP and TLS to the edge all still work."
+
+**SAMBHAV**, *restore*: `$ python3 backend.py A 3001` → *Backend A listening on 0.0.0.0:3001*, and requests from 10.7.16.45 appear in its log
+**PRINCE**: run the loop → *B B A B A B*
+**PRINCE:** "Backend A is back, and nginx is sending traffic to both backends again."
+
+### Optional extra scenarios (spec 6.3). Record only if you have time, or show them live if the evaluator asks
 
 ### 9b. Both backends stopped
 **SAMBHAV:** Ctrl+C both. **PRINCE:** `$ curl -v https://app.team1.test/api/status`
@@ -185,8 +204,8 @@ In cloud terms, Mac 1 is like Route 53, Mac 2 is like an AWS load balancer, and 
 
 | Member | Scenes |
 |---|---|
-| Prince (Mac 1) | 2, 3, 5 (client part), 6, 7, 9a/9b/9c/9e |
-| Atanu (Mac 2) | 1, 2, 4 (LAN curl), 5, 6 (log), 9a (error log), 10 |
-| Sambhav (Mac 3) | 2, 3 (client dig), 4, 8, 9a/9b/9d/9e (backend + client) |
+| Prince (Mac 1) | 2, 3, 5 (client part), 6, 7, 9 (before/after/restore loops) |
+| Atanu (Mac 2) | 1, 2, 4 (LAN curl), 5, 6 (log), 9 (logs, curl + ping, layer explanation), 10 |
+| Sambhav (Mac 3) | 2, 3 (client dig), 4, 8, 9 (stop / lsof / restart Backend A) |
 
-If the form's D3 video must be short, record **Scene 9a only** (about 1.5 min) as a separate clip.
+If the form's D3 video must be short, record **Scene 9 only** (about 2 min) as a separate clip. The form answer text is in `docs/D3_Failure_Demo.md`.

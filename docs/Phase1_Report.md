@@ -178,7 +178,7 @@ server {
 
 - **Strategy:** round-robin (nginx's default). Each new request goes to the next server in the list.
 - **Passive health check:** after 1 failed attempt a server is marked down for 10 s. `proxy_next_upstream` retries the failed request on the other server, so the client still gets a 200.
-- **Results:** a loop of 6 requests from Mac 1, Mac 2 and Mac 3 printed `A, B, A, B, …`. The nginx access log ([`evidence/D-loadbalancing`](../evidence/D-loadbalancing/mac2_nginx_team1_access.log)) holds 122 requests from all three clients: **62 served by :3001 and 61 by :3002**, for example:
+- **Results:** a loop of 6 requests from Mac 1, Mac 2 and Mac 3 printed `A, B, A, B, …`. The nginx access log ([`evidence/D-loadbalancing`](../evidence/D-loadbalancing/mac2_nginx_team1_access.log)) holds the requests from all three clients made during the build on 2 Oct: **62 served by :3001 and 61 by :3002**, for example:
 
 ```
 10.7.7.111 -> 10.7.7.111:3002 [02/Oct/2026:13:44:54 +0530] "GET /api/status HTTP/2.0" 200
@@ -269,15 +269,61 @@ Captured on **Mac 3, Wi-Fi en0**, no capture filter. Saved as **[`phase1_full_fl
 
 ## 7. Phase 1 failure demonstrations (spec 6.3)
 
-The table gives the procedure we follow for each scenario and the result we expect, based on how our system is built. The status column says honestly which ones are already recorded.
+The submission form (D3) asks for **one** failure scenario demonstrated fully. We chose **Option A: stop one backend**, which is also demo step 8 in spec section 8. It was recorded on 3 Oct 2026 and is described in 7.1. Section 7.2 lists all five scenarios from spec 6.3, with the procedure for the ones we have prepared but not yet recorded, in case the evaluator asks for them live.
+
+### 7.1 Recorded demonstration — Option A: stop Backend A (3 Oct 2026, IST)
+
+Evidence: [`evidence/failures/3-one-backend-stopped`](../evidence/failures/3-one-backend-stopped). It holds the terminal outputs from all three Macs and the matching nginx log lines exported from Mac 2.
+
+**Before (11:12:40).** Mac 1 ran six requests:
+```
+$ for i in 1 2 3 4 5 6; do curl -s -i https://app.team1.test/api/status | grep -i x-backend; done
+x-backend: A   x-backend: A   x-backend: B   x-backend: A   x-backend: B   x-backend: A
+```
+The Mac 2 access log shows the same order (`3001, 3001, 3002, 3001, 3002, 3001`). Both backends are serving. The first two requests both went to A because nginx's round-robin position carries over from earlier traffic, so a new loop does not always start on a clean A/B boundary. After that the order alternates.
+
+**Break.** On Mac 3 we pressed Ctrl+C in the Backend A window. `lsof -nP -iTCP -sTCP:LISTEN | grep -E ":3001|:3002"` then listed only `*:3002 (LISTEN)`.
+
+**After (11:14:40–41).** The same loop on Mac 1 returned:
+```
+x-backend: B   x-backend: B   x-backend: B   x-backend: B   x-backend: B   x-backend: B
+```
+Every request still got HTTP 200, so the user saw no error. nginx's two logs on Mac 2 explain why:
+```
+error.log   2026/10/03 11:14:41 [error] ... connect() failed (61: Connection refused) while connecting to upstream,
+            client: 10.7.28.177, ... upstream: "http://10.7.7.111:3001/api/status"
+access.log  10.7.28.177 -> 10.7.7.111:3001, 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+access.log  10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200   (x4 more)
+```
+The access-log line with **two** upstreams shows one request first tried port 3001, was refused, and was retried on 3002 (`proxy_next_upstream error`). Because of `max_fails=1 fail_timeout=10s`, nginx then marked A as down and sent the rest directly to B.
+
+To prove the machine itself was still up, we ran two commands on Mac 2:
+```
+$ curl -i http://10.7.7.111:3001/api/status
+curl: (7) Failed to connect to 10.7.7.111 port 3001 after 1072 ms: Couldn't connect to server
+$ ping -c 2 10.7.7.111
+2 packets transmitted, 2 packets received, 0.0% packet loss
+```
+
+**Layer affected.** The **application layer on the backend side**: the Backend A process stopped, so nothing listened on TCP port 3001. Every layer below it still worked:
+
+- DNS still resolved `app.team1.test` to 10.7.16.45.
+- The client's TCP + TLS connection to nginx on port 443 still succeeded.
+- Mac 3 still answered ping (the IP layer was fine).
+
+Only nginx's own TCP connection to port 3001 was refused: Mac 3's operating system sent a TCP RST, error 61. The client noticed nothing, because it only ever talks to the edge. The edge's health check hid the failure.
+
+**Restore (11:17:51).** On Mac 3, `python3 backend.py A 3001` printed `Backend A listening on 0.0.0.0:3001`. Its log immediately showed requests from nginx (`10.7.16.45 … "GET /api/status HTTP/1.1" 200`). The loop on Mac 1 returned `B, B, A, B, A, B`, and the access log matches (`3002, 3002, 3001, 3002, 3001, 3002`). Backend A is back in the rotation.
+
+### 7.2 All five scenarios from spec 6.3
 
 | # | Scenario | How we break it | Expected observation | Restore | Status |
 |---|---|---|---|---|---|
-| 1 | **Wrong DNS server on a client** | Mac 3: `sudo networksetup -setdnsservers Wi-Fi 8.8.8.8` + flush | `dig app.team1.test` → **NXDOMAIN** from 8.8.8.8. `curl` → "Could not resolve host". **But `ping 10.7.16.45` works.** DNS and IP connectivity are independent layers | set back to `10.7.28.177` + flush | Seen by accident during setup (Mac 2/3 had no DNS set → NXDOMAIN via 8.8.8.8); **deliberate recording pending** |
-| 2 | **DNS record → wrong IP** | Mac 1: change `host-record=app.team1.test,…` to `10.7.7.111`, restart dnsmasq, flush client | `dig` succeeds (NOERROR, answer 10.7.7.111), but `curl https://app.team1.test` → "Failed to connect … port 443: Connection refused", because nothing listens on 443 there. DNS is a directory, not a connection | put back 10.7.16.45, restart, flush | Wrong answer `10.7.7.111` captured by accident at 12:12 IST on Mac 2 and Mac 3 ([evidence](../evidence/failures/2-wrong-dns-record)); **curl consequence pending** |
-| 3 | **One backend stopped** (our form choice: Option A) | Mac 3: Ctrl+C Backend A | Loop keeps returning **200, only `X-Backend: B`**. nginx `error.log`: `connect() failed (61: Connection refused) … upstream: "http://10.7.7.111:3001/…"`; `max_fails=1` marks A down for 10 s and `proxy_next_upstream` retries on B. From Mac 2, `curl http://10.7.7.111:3001` is refused while `ping 10.7.7.111` works | `python3 backend.py A 3001`; after ~10 s A/B alternate again | **Pending (record for the D3 video)** |
-| 4 | **Both backends stopped** | Mac 3: Ctrl+C A and B | `curl -v`: DNS ✓, TCP ✓, TLS ✓ (`verify ok`), then **`HTTP/2 502`** generated by nginx itself: no `X-Backend` header, `server: nginx`. This is where the edge ends and the backend begins | restart both | **Pending** |
-| 5 | **Wrong destination port** | Client: `curl -v https://app.team1.test:9443` | "Failed to connect to app.team1.test port 9443 … Connection refused" (a TCP RST). `nc -vz app.team1.test 443` succeeds, `9443` is refused, ping works. IP finds the host, the port finds the service | — | **Pending** |
+| 1 | **Wrong DNS server on a client** | Mac 3: `sudo networksetup -setdnsservers Wi-Fi 8.8.8.8` + flush | `dig app.team1.test` → **NXDOMAIN** from 8.8.8.8. `curl` → "Could not resolve host". **But `ping 10.7.16.45` works.** DNS and IP connectivity are independent layers | set back to `10.7.28.177` + flush | Seen by accident during setup (Mac 2/3 had no DNS set → NXDOMAIN via 8.8.8.8); deliberate run prepared, not recorded |
+| 2 | **DNS record → wrong IP** | Mac 1: change `host-record=app.team1.test,…` to `10.7.7.111`, restart dnsmasq, flush client | `dig` succeeds (NOERROR, answer 10.7.7.111), but `curl https://app.team1.test` → "Failed to connect … port 443: Connection refused", because nothing listens on 443 there. DNS is a directory, not a connection | put back 10.7.16.45, restart, flush | Wrong answer `10.7.7.111` captured by accident at 12:12 IST on Mac 2 and Mac 3 ([evidence](../evidence/failures/2-wrong-dns-record)); curl consequence prepared, not recorded |
+| 3 | **One backend stopped** (our form choice: Option A) | Mac 3: Ctrl+C Backend A | Loop returned **200, only `X-Backend: B`**. error.log `connect() failed (61: Connection refused) … 10.7.7.111:3001`, and access log `3001, 3002 … 200` shows the retry. From Mac 2, `curl http://10.7.7.111:3001` failed while `ping 10.7.7.111` worked | `python3 backend.py A 3001` → `B, B, A, B, A, B` | ✅ **Recorded 3 Oct 2026, see 7.1** |
+| 4 | **Both backends stopped** | Mac 3: Ctrl+C A and B | `curl -v`: DNS ✓, TCP ✓, TLS ✓ (`verify ok`), then **`HTTP/2 502`** generated by nginx itself: no `X-Backend` header, `server: nginx`. This is where the edge ends and the backend begins | restart both | Prepared, not recorded |
+| 5 | **Wrong destination port** | Client: `curl -v https://app.team1.test:9443` | "Failed to connect to app.team1.test port 9443 … Connection refused" (a TCP RST). `nc -vz app.team1.test 443` succeeds, `9443` is refused, ping works. IP finds the host, the port finds the service | — | Prepared, not recorded |
 
 **Related unplanned observation (already in our Mac 2 logs, 2 Oct 23:52 IST):** when Mac 3 was not reachable at all, nginx logged `upstream timed out (60: Operation timed out) while connecting to upstream` for **both** 3002 and 3001, then returned **504 Gateway Timeout**. Compare with scenario 4: a backend host that is *up but has no process on the port* answers with a TCP RST, so nginx gives **502 Bad Gateway** at once. A host that is *gone* sends nothing, so nginx waits for `proxy_connect_timeout` (2 s per server) and gives **504**.
 
@@ -325,7 +371,8 @@ The table gives the procedure we follow for each scenario and the result we expe
 | E – HTTPS with team CA, trusted on all clients, no `-k`, HTTP/1.1 + HTTP/2 | ✅ |
 | F – `Cache-Control`, `ETag`, 304, disk-cache hit | ✅ |
 | G – DNS / TCP / TLS / encrypted data / ports / LB captured | ✅ |
-| 6.3 – Five failure demonstrations | ⬜ to record |
+| D3 / demo step 8 – Option A failure demo (one backend stopped) | ✅ recorded 3 Oct 2026 |
+| 6.3 – Other four failure scenarios | procedure prepared (section 7.2); show live if the evaluator asks |
 | Faculty confirmation of team number (`team1`) and the 3-machine role split | ⬜ |
 
 ## Appendix — repository map

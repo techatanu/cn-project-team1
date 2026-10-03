@@ -1,0 +1,121 @@
+# Option A - stop Backend A (3 Oct 2026, IST)
+# Terminal outputs from Mac 1, Mac 2 and Mac 3 (see option_A_terminal_outputs.pdf)
+# plus the matching nginx log lines, exported from Mac 2
+
+Step 0
+atanuadhikari@Atanus-MacBook-Pro ~ % tail -f /opt/homebrew/var/log/nginx/team1_access.log
+10.7.28.177 -> 10.7.7.111:3001 [02/Oct/2026:20:08:53 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [02/Oct/2026:20:08:53 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [02/Oct/2026:20:08:53 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [02/Oct/2026:20:10:32 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002, 10.7.7.111:3001 [02/Oct/2026:23:52:55 +0530] "GET /api/info
+HTTP/2.0" 504
+
+Step 1​
+atanuadhikari@Atanus-MacBook-Pro ~ % tail -f /opt/homebrew/var/log/nginx/error.log
+2026/10/02 23:52:53 [error] 13863#0: *203 upstream timed out (60: Operation timed out) while
+connecting to upstream, client: 10.7.28.177, server: app.team1.test, request: "GET /api/info
+HTTP/2.0", upstream: "http://10.7.7.111:3002/api/info", host: "app.team1.test"
+2026/10/02 23:52:55 [error] 13863#0: *203 upstream timed out (60: Operation timed out) while
+connecting to upstream, client: 10.7.28.177, server: app.team1.test, request: "GET /api/info
+HTTP/2.0", upstream: "http://10.7.7.111:3001/api/info", host: "app.team1.test"
+
+Step 2
+princekumarsingh@Princes-MacBook-Pro-3 ~ % for i in 1 2 3 4 5 6; do curl -s -i
+https://app.team1.test/api/status | grep -i x-backend; done
+x-backend: A
+x-backend: A
+x-backend: B
+x-backend: A
+x-backend: B
+x-backend: A
+princekumarsingh@Princes-MacBook-Pro-3 ~ %
+
+Step 3
+(base) sambhavkumar@Sambhavs-MacBook-Pro backend % lsof -nP -iTCP -sTCP:LISTEN |
+grep -E ":3001|:3002"
+python3.1 59654 sambhavkumar 3u IPv4 0x30d6eebf0f8907e5    0t0 TCP *:3002 (LISTEN)
+(base) sambhavkumar@Sambhavs-MacBook-Pro backend %
+
+princekumarsingh@Princes-MacBook-Pro-3 ~ % for i in 1 2 3 4 5 6; do curl -s -i
+https://app.team1.test/api/status | grep -i x-backend; done
+x-backend: B
+x-backend: B
+x-backend: B
+x-backend: B
+x-backend: B
+x-backend: B
+princekumarsingh@Princes-MacBook-Pro-3 ~ %
+
+Step 4
+atanuadhikari@Atanus-MacBook-Pro ~ % tail -f /opt/homebrew/var/log/nginx/error.log
+2026/10/02 23:52:53 [error] 13863#0: *203 upstream timed out (60: Operation timed out) while
+connecting to upstream, client: 10.7.28.177, server: app.team1.test, request: "GET /api/info
+HTTP/2.0", upstream: "http://10.7.7.111:3002/api/info", host: "app.team1.test"
+2026/10/02 23:52:55 [error] 13863#0: *203 upstream timed out (60: Operation timed out) while
+connecting to upstream, client: 10.7.28.177, server: app.team1.test, request: "GET /api/info
+HTTP/2.0", upstream: "http://10.7.7.111:3001/api/info", host: "app.team1.test"
+2026/10/03 11:14:41 [error] 13863#0: *220 kevent() reported that connect() failed (61:
+Connection refused) while connecting to upstream, client: 10.7.28.177, server: app.team1.test,
+request: "GET /api/status HTTP/2.0", upstream: "http://10.7.7.111:3001/api/status", host:
+"app.team1.test"
+
+Step 5
+atanuadhikari@Atanus-MacBook-Pro ~ % curl -i http://10.7.7.111:3001/api/status
+curl: (7) Failed to connect to 10.7.7.111 port 3001 after 1072 ms: Couldn't connect to server
+atanuadhikari@Atanus-MacBook-Pro ~ %
+
+Step 6
+atanuadhikari@Atanus-MacBook-Pro ~ % ping -c 2 10.7.7.111
+PING 10.7.7.111 (10.7.7.111): 56 data bytes
+64 bytes from 10.7.7.111: icmp_seq=0 ttl=64 time=53.339 ms
+64 bytes from 10.7.7.111: icmp_seq=1 ttl=64 time=22.852 ms
+--- 10.7.7.111 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 22.852/38.096/53.339/15.244 ms
+atanuadhikari@Atanus-MacBook-Pro ~ %
+
+Step 7
+(base) sambhavkumar@Sambhavs-MacBook-Pro backend % python3 backend.py A 3001
+Backend A listening on 0.0.0.0:3001 (Ctrl+C to stop)
+10.7.16.45 - - [03/Oct/2026 11:17:51] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [03/Oct/2026 11:17:51] "GET /api/status HTTP/1.1" 200 -
+
+Step 8
+princekumarsingh@Princes-MacBook-Pro-3 ~ % for i in 1 2 3 4 5 6; do curl -s -i
+https://app.team1.test/api/status | grep -i x-backend; done
+x-backend: B
+x-backend: B
+x-backend: A
+x-backend: B
+x-backend: A
+x-backend: B
+princekumarsingh@Princes-MacBook-Pro-3 ~ %
+
+==== Mac 2: nginx access log for 3 Oct 2026 (client -> upstream chosen) ====
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:12:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:40 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001, 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:14:41 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3001 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+10.7.28.177 -> 10.7.7.111:3002 [03/Oct/2026:11:17:51 +0530] "GET /api/status HTTP/2.0" 200
+
+==== Mac 2: nginx error log for 3 Oct 2026 ====
+2026/10/03 11:14:41 [error] 13863#0: *220 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 10.7.28.177, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.7.111:3001/api/status", host: "app.team1.test"
