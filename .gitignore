@@ -3,3 +3,6 @@
 *.csr
 *.srl
 .DS_Store
+
+# team-only notes (video script lives outside the repo)
+Video_Script*
