@@ -1,0 +1,22 @@
+# Mac 3 (3 Oct 2026): both backends listening on all interfaces + local test
+(base) sambhavkumar@Sambhavs-MacBook-Pro ~ % lsof -nP -iTCP -sTCP:LISTEN | grep -E
+":3001|:3002"
+python3.1 59654 sambhavkumar 3u IPv4 0x30d6eebf0f8907e5    0t0 TCP *:3002 (LISTEN)
+python3.1 66937 sambhavkumar 3u IPv4 0x30d6eebf0fc09ed5    0t0 TCP *:3001 (LISTEN)
+(base) sambhavkumar@Sambhavs-MacBook-Pro ~ %
+
+
+(base) sambhavkumar@Sambhavs-MacBook-Pro ~ % /usr/bin/curl -i
+http://localhost:3001/api/status
+HTTP/1.0 200 OK
+Server: TeamBackend/1.0 Python/3.12.4
+Date: Sat, 03 Oct 2026 06:03:53 GMT
+X-Backend: A
+Cache-Control: no-store
+Content-Type: application/json
+Content-Length: 76
+
+{"backend": "A", "status": "ok", "time": "2026-10-03T06:03:53.213716+00:00"}% (base)
+sambhavkumar@Sambhavs-MacBook-Pro ~ %
+
+

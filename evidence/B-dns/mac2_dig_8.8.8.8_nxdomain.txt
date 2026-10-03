@@ -1,0 +1,21 @@
+# Mac 2 (3 Oct 2026 11:32 IST): public DNS does not know our private name
+atanuadhikari@Atanus-MacBook-Pro ~ % dig @8.8.8.8 app.team1.test
+; <<>> DiG 9.10.6 <<>> @8.8.8.8 app.team1.test
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 43053
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;app.team1.test.                  IN   A
+;; AUTHORITY SECTION:
+.                     85738 IN  SOA a.root-servers.net. nstld.verisign-grs.com.
+2026100300 1800 900 604800 86400
+;; Query time: 10 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Sat Oct 03 11:32:06 IST 2026
+;; MSG SIZE rcvd: 118
+atanuadhikari@Atanus-MacBook-Pro ~ %
+

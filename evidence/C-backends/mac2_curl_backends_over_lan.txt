@@ -1,0 +1,21 @@
+# Mac 2 (3 Oct 2026): reaching both backends across the LAN
+atanuadhikari@Atanus-MacBook-Pro ~ % curl -i http://10.7.7.111:3001/api/status
+HTTP/1.0 200 OK
+Server: TeamBackend/1.0 Python/3.12.4
+Date: Sat, 03 Oct 2026 06:04:38 GMT
+X-Backend: A
+Cache-Control: no-store
+Content-Type: application/json
+Content-Length: 76
+{"backend": "A", "status": "ok", "time": "2026-10-03T06:04:38.879141+00:00"}%
+atanuadhikari@Atanus-MacBook-Pro ~ % curl -i http://10.7.7.111:3002/api/status
+HTTP/1.0 200 OK
+Server: TeamBackend/1.0 Python/3.12.4
+Date: Sat, 03 Oct 2026 06:04:46 GMT
+X-Backend: B
+Cache-Control: no-store
+Content-Type: application/json
+Content-Length: 76
+{"backend": "B", "status": "ok", "time": "2026-10-03T06:04:46.842678+00:00"}%
+atanuadhikari@Atanus-MacBook-Pro ~ %
+

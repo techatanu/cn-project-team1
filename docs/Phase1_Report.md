@@ -125,7 +125,8 @@ log-facility=/tmp/dnsmasq.log
 - Mac 2, 12:41:59 IST: `dig app.team1.test` → `app.team1.test. 60 IN A 10.7.16.45`, `SERVER: 10.7.28.177#53`, flags `qr aa rd ra` (authoritative answer).
 - Mac 3, 12:41:59 IST: same answer from 10.7.28.177.
 - Mac 3, 12:46:50 IST: `dig api.team1.test` → `60 IN A 10.7.16.45`.
-- `dig @8.8.8.8 app.team1.test` → **NXDOMAIN**: the name exists only inside our network.
+- Mac 2, 3 Oct 11:32:06 IST: `dig @8.8.8.8 app.team1.test` → **NXDOMAIN**, with only the root zone's SOA in the authority section. The name exists only inside our network.
+- Mac 1, 3 Oct: `sudo lsof -nP -i :53` shows dnsmasq listening on **UDP and TCP 53** on 10.7.28.177 (LAN), 127.0.0.1 (itself) and IPv6 (`::1` and link-local addresses).
 
 **DNS vs connection:** DNS only turns a name into an IP. It moves no application data. After the answer, the client opens a completely separate TCP connection to that IP on port 443. In the capture the DNS exchange (UDP) ends at packet 240 and the TCP SYN starts at packet 243.
 
@@ -141,7 +142,7 @@ log-facility=/tmp/dnsmasq.log
 | `GET /api/info` | Same JSON on both backends, `Cache-Control: public, max-age=60`, `ETag: "6c623c0954f8001c"`, 304 on a matching `If-None-Match` |
 | every response | `X-Backend: A` or `X-Backend: B` |
 
-Both bind to `0.0.0.0`, so `lsof` shows `*:3001` and `*:3002` (not 127.0.0.1 only). Mac 2 reached both over the LAN (`curl -i http://10.7.7.111:3001/api/status` → `X-Backend: A`, `:3002` → `B`). The backend terminal logs show requests from `127.0.0.1` (local test) and from `10.7.16.45` (nginx) ([`evidence/C-backends`](../evidence/C-backends)).
+Both bind to `0.0.0.0`, so `lsof` on Mac 3 shows `TCP *:3001 (LISTEN)` and `TCP *:3002 (LISTEN)` (not 127.0.0.1 only). `/usr/bin/curl -i http://localhost:3001/api/status` returns `HTTP/1.0 200 OK`, `Server: TeamBackend/1.0 Python/3.12.4`, `X-Backend: A`. Mac 2 reached both over the LAN: `curl -i http://10.7.7.111:3001/api/status` → `X-Backend: A`, and `:3002` → `X-Backend: B`. These checks were re-run on 3 Oct 2026, with the outputs in the evidence folder. The backend terminal logs show requests from `127.0.0.1` (local test) and from `10.7.16.45` (nginx) ([`evidence/C-backends`](../evidence/C-backends)).
 
 ### Task D — Edge reverse proxy and load balancer (Mac 2)
 
@@ -212,7 +213,7 @@ We used our **own team CA** instead of a bare self-signed certificate, so every 
 | Verification | `subjectAltName: host "app.team1.test" matched` · `SSL certificate verify ok` | same |
 | Response | `HTTP/2 200`, `x-backend: A` | `HTTP/2 200`, `x-backend: B` |
 
-Also shown: Mac 1 `curl -v https://app.team1.test` (TLS 1.3, verify ok, HTTP/2 200), Chrome opening `https://app.team1.test/api/status` by name with no warning, `curl -sI --http1.1` → `HTTP/1.1 200 OK` and `--http2` → `HTTP/2 200`. **HTTP/3** (QUIC over UDP) is explanation-only, as the spec allows.
+Also shown: Mac 1 `curl -v https://app.team1.test` (TLS 1.3, verify ok, HTTP/2 200), the browser opening `https://app.team1.test/api/status` by name with no warning, `curl -sI --http1.1` → `HTTP/1.1 200 OK` (with `Connection: keep-alive`) and `--http2` → `HTTP/2 200` (lower-case header names, as HTTP/2 requires) on 3 Oct. The browser's **Certificate Viewer** (Chromium-based Brave on a client Mac) shows *Issued To* `app.team1.test` / Team1 CN Project, *Issued By* `Team1 Local CA`, valid Friday 2 October 2026 13:10:15 → Saturday 2 October 2027 13:10:15 IST (= 07:40:15 GMT), and SHA-256 fingerprint `73533e1c…b358`. **HTTP/3** (QUIC over UDP) is explanation-only, as the spec allows.
 
 **Handshake in words:** ClientHello (supported versions and ciphers, SNI, ALPN, key share) → ServerHello (chosen cipher; in our capture 0xcca8 for TLS 1.2 and 0x1303 for TLS 1.3) → Certificate (server proves its identity with a chain to a CA the client trusts) → Key Exchange (ECDHE, so both sides derive the same session keys) → ChangeCipherSpec / Finished (everything after this is encrypted). In TLS 1.3 the certificate itself is already encrypted, which is why we also captured a TLS 1.2 session to see the Certificate in clear.
 
@@ -253,7 +254,7 @@ Captured on **Mac 3, Wi-Fi en0**, no capture filter. Saved as **[`phase1_full_fl
 
 | Layer / event | Display filter | What we found |
 |---|---|---|
-| **DNS** | `dns.qry.name contains "team1.test"` | Pkt 239 (t = 101.203 s) standard query `0x647b` A app.team1.test, UDP **50215 → 53**. Pkt 240 (t = 101.214 s) response **A 10.7.16.45, TTL 60**, authoritative flag set. Second lookup pkts 392/393 (`0x5868`). Conversations: all 210 UDP conversations of Mac 3 go to 10.7.28.177:53. The team1.test ones use source ports 50215 and 51388 |
+| **DNS** | `dns.qry.name contains "team1.test"` | Pkt 239 (t = 101.203 s) standard query `0x647b` A app.team1.test, UDP **50215 → 53**. Pkt 240 (t = 101.214 s) response **A 10.7.16.45, TTL 60 (1 minute)**, flags 0x8580 (response, authoritative, no error), answered 10.27 ms after the request ([screenshot](../evidence/G-capture/pkt240_dns_response_ttl60.png)). Second lookup pkts 392/393 (`0x5868`). Conversations: all 210 UDP conversations of Mac 3 go to 10.7.28.177:53. The team1.test ones use source ports 50215 and 51388 |
 | **ARP** | — | Pkt 241 "Who has 10.7.16.45? Tell 10.7.7.111", pkt 242 "10.7.16.45 is at 12:32:e6:75:62:df": IP → MAC before the first frame to the edge |
 | **TCP handshake** | `tcp.flags.syn==1`, `tcp.stream eq 0` | Pkt 243 **SYN** 59200 → 443, Seq=0, Win=65535, MSS=1460, WS=64, SACK_PERM · pkt 244 SYN retransmission · pkt 245 **SYN-ACK** Seq=0 Ack=1 · pkt 246 duplicate SYN-ACK · pkt 247 **ACK** Seq=1 Ack=1 · pkt 248 Dup ACK. Only then does TLS start (pkt 249) |
 | **TLS 1.2** | `tcp.stream eq 0 && tls` | 249 Client Hello (SNI=app.team1.test, 46 cipher suites, ALPN h2/http/1.1) · 252 **Server Hello, Certificate, Server Key Exchange, Server Hello Done** (`tls.handshake.type == 11` → only pkt 252) · 254 Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message · 256 Change Cipher Spec, Encrypted Handshake Message · 258–278 Application Data · 281 Encrypted Alert |
