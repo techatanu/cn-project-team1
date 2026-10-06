@@ -15,6 +15,8 @@ A fully local private service on three macOS laptops: own DNS → HTTPS edge (ng
 
 Domain: `app.team1.test`, `api.team1.test` → 10.7.16.45 · Network: Wi-Fi `Rishihood_Learner`, 10.7.0.0/19, gateway 10.7.0.1.
 
+Team on GitHub: Atanu Adhikari ([@techatanu](https://github.com/techatanu)) · Prince Kumar Singh ([@princesingh2024](https://github.com/princesingh2024)) · Sambhav Kumar ([@alGo-explO](https://github.com/alGo-explO)).
+
 ## Repository layout (mapped to spec section 9 deliverables)
 
 ```
