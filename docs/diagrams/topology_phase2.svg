@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 730" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#15803d"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+    <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+  </defs>
+  <rect width="1100" height="730" fill="#ffffff"/>
+  <text x="550" y="34" text-anchor="middle" font-size="20" font-weight="bold" fill="#0f172a">Team 1: Phase 2 topology (Harden, Recover, Troubleshoot)</text>
+
+  <!-- Wi-Fi segment -->
+  <rect x="50" y="56" width="1000" height="44" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="550" y="76" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">Wi-Fi "Rishihood_Learner" · 10.7.0.0/19 · gateway 10.7.0.1</text>
+  <text x="550" y="93" text-anchor="middle" font-size="12" fill="#475569">clients list TWO DNS servers: 10.7.23.243 (primary), 10.7.24.9 (backup)</text>
+  <line x1="190" y1="100" x2="190" y2="140" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="550" y1="100" x2="550" y2="140" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="910" y1="100" x2="910" y2="140" stroke="#94a3b8" stroke-width="2"/>
+
+  <!-- Mac 1 -->
+  <rect x="50" y="140" width="280" height="230" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="190" y="166" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">Mac 1: Prince · 10.7.23.243</text>
+  <text x="190" y="194" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">PRIMARY DNS · dnsmasq :53</text>
+  <text x="190" y="214" text-anchor="middle" font-size="12.5" fill="#0f172a">team1.hosts: app/api → 10.7.16.45</text>
+  <text x="190" y="233" text-anchor="middle" font-size="12.5" fill="#0f172a">local-ttl=30 (Ext B) · change = edit + SIGHUP</text>
+  <line x1="70" y1="248" x2="310" y2="248" stroke="#93c5fd"/>
+  <text x="190" y="270" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">TEST CLIENT</text>
+  <text x="190" y="290" text-anchor="middle" font-size="12.5" fill="#0f172a">resolvers: 127.0.0.1, then 10.7.24.9</text>
+  <text x="190" y="309" text-anchor="middle" font-size="12.5" fill="#0f172a">mac1.sh test-a…e · diagnose (Ext F)</text>
+  <text x="190" y="350" text-anchor="middle" font-size="12" font-style="italic" fill="#475569">≈ Route 53 + a client</text>
+
+  <!-- Mac 2 -->
+  <rect x="410" y="140" width="280" height="230" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="550" y="166" text-anchor="middle" font-size="16" font-weight="bold" fill="#14532d">Mac 2: Atanu · 10.7.16.45</text>
+  <text x="550" y="194" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">PRIMARY EDGE · nginx :443</text>
+  <text x="550" y="214" text-anchor="middle" font-size="12.5" fill="#0f172a">TLS 1.2/1.3 · HTTP/2 · X-Edge: primary</text>
+  <text x="550" y="233" text-anchor="middle" font-size="12.5" fill="#0f172a">round-robin A / B</text>
+  <text x="550" y="256" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#14532d">HA (Ext D):</text>
+  <text x="550" y="274" text-anchor="middle" font-size="12" fill="#0f172a">max_fails=1 fail_timeout=5s</text>
+  <text x="550" y="291" text-anchor="middle" font-size="12" fill="#0f172a">proxy_connect_timeout 2s</text>
+  <text x="550" y="308" text-anchor="middle" font-size="12" fill="#0f172a">proxy_next_upstream error timeout 502 503</text>
+  <text x="550" y="332" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">still a single point of failure</text>
+  <text x="550" y="352" text-anchor="middle" font-size="12" font-style="italic" fill="#475569">≈ cloud load balancer (ALB)</text>
+
+  <!-- Mac 3 -->
+  <rect x="770" y="140" width="280" height="490" rx="10" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+  <text x="910" y="166" text-anchor="middle" font-size="16" font-weight="bold" fill="#7c2d12">Mac 3: Sambhav · 10.7.24.9</text>
+  <!-- pf -->
+  <rect x="785" y="180" width="250" height="44" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="910" y="198" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#7f1d1d">pf firewall (Ext C) · com.apple/team1</text>
+  <text x="910" y="215" text-anchor="middle" font-size="12" fill="#7f1d1d">en0: TCP 3001/3002 only from 10.7.16.45</text>
+  <!-- backends -->
+  <rect x="800" y="236" width="220" height="44" rx="6" fill="#ffffff" stroke="#c2410c"/>
+  <text x="910" y="255" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Backend A · TCP 3001</text>
+  <text x="910" y="272" text-anchor="middle" font-size="12" fill="#475569">X-Backend: A</text>
+  <rect x="800" y="290" width="220" height="44" rx="6" fill="#ffffff" stroke="#c2410c"/>
+  <text x="910" y="309" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Backend B · TCP 3002</text>
+  <text x="910" y="326" text-anchor="middle" font-size="12" fill="#475569">X-Backend: B</text>
+  <!-- backup DNS -->
+  <rect x="800" y="380" width="220" height="62" rx="6" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="910" y="400" text-anchor="middle" font-size="13" font-weight="bold" fill="#4c1d95">BACKUP DNS (Ext A)</text>
+  <text x="910" y="417" text-anchor="middle" font-size="12" fill="#0f172a">dnsmasq :53 · same records</text>
+  <text x="910" y="433" text-anchor="middle" font-size="12" fill="#0f172a">same TTL 30</text>
+  <!-- standby edge -->
+  <rect x="800" y="470" width="220" height="70" rx="6" fill="#fef3c7" stroke="#c2410c"/>
+  <text x="910" y="490" text-anchor="middle" font-size="13" font-weight="bold" fill="#7c2d12">STANDBY EDGE (Ext E)</text>
+  <text x="910" y="507" text-anchor="middle" font-size="12" fill="#0f172a">nginx :443 · same config</text>
+  <text x="910" y="523" text-anchor="middle" font-size="12" fill="#0f172a">X-Edge: standby</text>
+  <!-- standby -> backends via loopback -->
+  <path d="M1030,505 L1040,505 L1040,312 L1024,312" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#as)"/>
+  <text x="910" y="352" text-anchor="middle" font-size="11" fill="#475569">standby → backends via 127.0.0.1</text>
+  <text x="910" y="367" text-anchor="middle" font-size="11" fill="#475569">(loopback: not filtered by pf)</text>
+  <text x="910" y="575" text-anchor="middle" font-size="12" font-style="italic" fill="#475569">≈ app servers + secondary DNS</text>
+  <text x="910" y="593" text-anchor="middle" font-size="12" font-style="italic" fill="#475569">+ standby LB in another zone</text>
+  <text x="910" y="614" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#b91c1c">hosts every redundant part: also a SPOF</text>
+
+  <!-- ② client -> edge -->
+  <path d="M330,215 L406,215" stroke="#1d4ed8" stroke-width="2.5" fill="none" marker-end="url(#ab)"/>
+  <text x="368" y="205" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1d4ed8">② HTTPS</text>
+  <text x="368" y="232" text-anchor="middle" font-size="11" fill="#1d4ed8">TCP 443</text>
+  <!-- ③ edge -> backends -->
+  <path d="M690,250 L796,258" stroke="#15803d" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+  <path d="M690,270 L796,312" stroke="#15803d" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+  <text x="732" y="242" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#15803d">③ HTTP</text>
+  <text x="726" y="306" text-anchor="middle" font-size="11" fill="#15803d">allowed</text>
+  <text x="726" y="320" text-anchor="middle" font-size="11" fill="#15803d">by pf</text>
+
+  <!-- ① DNS to primary (local) and failover to backup -->
+  <path d="M230,370 L230,411 L796,411" stroke="#7c3aed" stroke-width="2" stroke-dasharray="7,4" fill="none" marker-end="url(#ap)"/>
+  <text x="500" y="404" text-anchor="middle" font-size="12" font-weight="bold" fill="#7c3aed">① DNS UDP 53: if the primary is down → backup answers (Ext A)</text>
+
+  <!-- Ext E cutover -->
+  <path d="M160,370 L160,505 L796,505" stroke="#c2410c" stroke-width="2" stroke-dasharray="7,4" fill="none" marker-end="url(#ao)"/>
+  <text x="480" y="497" text-anchor="middle" font-size="12" font-weight="bold" fill="#c2410c">after DNS cutover app → 10.7.24.9: HTTPS to the standby edge (Ext E)</text>
+  <text x="480" y="522" text-anchor="middle" font-size="11.5" fill="#c2410c">cached clients keep hitting Mac 2 until the 30 s TTL expires</text>
+
+  <!-- Ext C blocked -->
+  <path d="M90,370 L90,590 L760,590" stroke="#b91c1c" stroke-width="2" fill="none"/>
+  <line x1="752" y1="580" x2="772" y2="600" stroke="#b91c1c" stroke-width="3"/>
+  <line x1="772" y1="580" x2="752" y2="600" stroke="#b91c1c" stroke-width="3"/>
+  <text x="420" y="582" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">direct client → 10.7.24.9:3001/3002: DROPPED by pf → curl timeout (Ext C)</text>
+
+  <!-- Legend -->
+  <rect x="50" y="648" width="1000" height="66" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="70" y="670" font-size="12.5" font-weight="bold" fill="#0f172a">Request path:</text>
+  <text x="170" y="670" font-size="12.5" fill="#0f172a">① DNS (UDP 53) → ② TCP + TLS to the edge :443 → ③ plain HTTP edge → backend (round-robin, failed backend skipped)</text>
+  <text x="70" y="692" font-size="12.5" font-weight="bold" fill="#0f172a">Ext F:</text>
+  <text x="170" y="692" font-size="12.5" fill="#0f172a">faults diagnosed layer by layer (DNS → TCP → TLS → HTTP) with diagnose.sh; tested with inject_fault.sh</text>
+  <text x="70" y="708" font-size="11.5" fill="#475569">Solid = normal traffic · dashed = failover / cutover path · red ✗ = blocked</text>
+</svg>

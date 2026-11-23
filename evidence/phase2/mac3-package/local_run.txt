@@ -1,0 +1,145 @@
+# mac3-package test - mode=local - 2026-11-23 01:00:31 IST - host=Atanus-MacBook-Pro
+
+=== 1. Build and inspect the zip ===
+built dist/mac3-sambhav-backends-backupdns.zip (29 files, no *.key)
+built dist/mac1-prince-dns.zip (25 files, no *.key)
+  $ unzip -l /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/dist/mac3-sambhav-backends-backupdns.zip
+    Archive:  /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/dist/mac3-sambhav-backends-backupdns.zip
+      Length      Date    Time    Name
+    ---------  ---------- -----   ----
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac2-edge/
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac2-edge/tls/
+         1212  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac2-edge/tls/team1-ca.crt
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac2-edge/nginx/
+         1896  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac2-edge/nginx/team1-phase2.conf
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/
+          569  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/stop_backends.sh
+         1178  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/start_backends.sh
+         1316  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/disable_firewall.sh
+         2316  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/enable_firewall.sh
+         1043  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backends/pf_team1.conf
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/
+         1124  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/set_record.sh
+          572  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/dnsmasq-backup.conf
+         1727  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/start_backup_dns.sh
+          392  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/stop_backup_dns.sh
+          170  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-backup-dns/team1.hosts
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/
+         2100  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/nginx-standby.conf
+          313  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/stop_standby_edge.sh
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/certs/
+         1338  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/certs/app.team1.test.crt
+         2615  11-23-2026 01:00   mac3-sambhav-backends-backupdns/config/mac3-standby-edge/start_standby_edge.sh
+            0  11-23-2026 01:00   mac3-sambhav-backends-backupdns/backend/
+         2394  11-23-2026 01:00   mac3-sambhav-backends-backupdns/backend/backend.py
+         6639  11-23-2026 01:00   mac3-sambhav-backends-backupdns/README_SAMBHAV.md
+         5513  11-23-2026 01:00   mac3-sambhav-backends-backupdns/mac3.sh
+    ---------                     -------
+        34427                     29 files
+  [PASS] zip contains NO private key
+  [PASS] zip has README_SAMBHAV.md
+  [PASS] zip has mac3.sh
+  [PASS] zip has backend/backend.py
+  [PASS] zip has config/mac3-backends/pf_team1.conf
+  [PASS] zip has config/mac3-backends/enable_firewall.sh
+  [PASS] zip has config/mac3-backends/disable_firewall.sh
+  [PASS] zip has config/mac3-backup-dns/dnsmasq-backup.conf
+  [PASS] zip has config/mac3-standby-edge/nginx-standby.conf
+  [PASS] zip has config/mac3-standby-edge/certs/app.team1.test.crt
+  [PASS] zip has config/mac2-edge/tls/team1-ca.crt
+  [PASS] scripts are executable after unzip
+  [PASS] firewall scripts in zip identical to the ones tested by Ext C
+
+=== 2. ./mac3.sh start + status ===
+  $ ./mac3.sh start
+    
+    ##### 2026-11-23 01:00:32  ./mac3.sh start
+    Backend A (pid 27837): {"backend": "A", "status": "ok", "time": "2026-11-22T19:30:32.808119+00:00"}
+    Backend B (pid 27846): {"backend": "B", "status": "ok", "time": "2026-11-22T19:30:33.179063+00:00"}
+    dig @127.0.0.1 -p 5301 app.team1.test:
+      app.team1.test.		30	IN	A	10.7.16.45
+      api.team1.test.		30	IN	A	10.7.16.45
+  $ ./mac3.sh status
+    
+    ##### 2026-11-23 01:00:34  ./mac3.sh status
+    Mac 3 self-test  (2026-11-23 01:00:34, DNS port 5301, edge port 9443)
+    IP addresses: 10.7.16.45 
+      [PASS] Backend A answers on :3001 with X-Backend: A
+      [PASS] Backend B answers on :3002 with X-Backend: B
+      [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+      [PASS] Backup DNS answers app.team1.test
+            record: app.team1.test.		30	IN	A	10.7.16.45
+      [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+      [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+    Result: 4 passed, 0 failed
+  [PASS] backend A up
+  [PASS] backend B up
+  [PASS] backup DNS answers 10.7.16.45 with TTL 30
+
+=== 3. Ext D controls: kill-a / revive-a ===
+  $ ./mac3.sh kill-a
+    
+    ##### 2026-11-23 01:00:34  ./mac3.sh kill-a
+    Backend A stopped
+  [PASS] after kill-a, :3001 is closed
+  [PASS] ...and B still serves
+  $ ./mac3.sh revive-a
+    
+    ##### 2026-11-23 01:00:35  ./mac3.sh revive-a
+    Backend A (pid 27938): {"backend": "A", "status": "ok", "time": "2026-11-22T19:30:35.504227+00:00"}
+  [PASS] after revive-a, A serves again
+
+=== 4. Ext B/E control: dns-set ===
+  $ ./mac3.sh dns-set 10.7.24.9
+    
+    ##### 2026-11-23 01:00:35  ./mac3.sh dns-set 10.7.24.9
+    record now:
+      app.team1.test.		30	IN	A	10.7.24.9
+  [PASS] record changed to 10.7.24.9 without restart
+  $ ./mac3.sh dns-set 10.7.16.45
+    
+    ##### 2026-11-23 01:00:36  ./mac3.sh dns-set 10.7.16.45
+    record now:
+      app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] record rolled back to 10.7.16.45
+
+=== 5. Ext E: standby edge ===
+  $ ./mac3.sh standby-on
+    
+    ##### 2026-11-23 01:00:36  ./mac3.sh standby-on
+    nginx: the configuration file /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/.sim/pkg/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf syntax is ok
+    nginx: configuration file /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/.sim/pkg/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf test is successful
+    Standby edge on :9443. Local check (X-Edge must be standby):
+      HTTP/2 200 
+      x-backend: A
+      x-edge: standby
+    Access log: tail -f /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/.sim/pkg/mac3-sambhav-backends-backupdns/.run/standby-edge/access.log
+  [PASS] standby edge: 200 + X-Edge: standby
+  $ ./mac3.sh status
+    
+    ##### 2026-11-23 01:00:37  ./mac3.sh status
+    Mac 3 self-test  (2026-11-23 01:00:37, DNS port 5301, edge port 9443)
+    IP addresses: 10.7.16.45 
+      [PASS] Backend A answers on :3001 with X-Backend: A
+      [PASS] Backend B answers on :3002 with X-Backend: B
+      [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+      [PASS] Backup DNS answers app.team1.test
+            record: app.team1.test.		30	IN	A	10.7.16.45
+      [PASS] Standby edge on :9443 returns 200 with X-Edge: standby
+      [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+    Result: 5 passed, 0 failed
+
+=== 6. ./mac3.sh stop ===
+  $ ./mac3.sh stop
+    
+    ##### 2026-11-23 01:00:37  ./mac3.sh stop
+    standby edge stopped
+    Backend A stopped
+    Backend B stopped
+    backup DNS stopped
+  [PASS] everything stopped (3001, 3002, 9443 closed)
+  [PASS] backup DNS stopped
+
+=== RESULT: 24 passed, 0 failed (mode=local) ===

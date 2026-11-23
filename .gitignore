@@ -6,3 +6,13 @@
 
 # team-only notes (video script lives outside the repo)
 Video_Script*
+
+# Phase 2 local-simulation runtime files
+.sim/
+.run/
+config/mac3-standby-edge/certs/*.key
+
+# generated packages and run-sheets (local / offline use only)
+dist/
+docs/*Runsheet*
+docs/*Viva*

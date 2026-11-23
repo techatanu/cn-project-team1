@@ -1,0 +1,49 @@
+# extB test - mode=local - 2026-11-23 03:05:21 IST - host=app
+
+=== Setup (Mode 1): record app.team1.test -> 127.0.0.1, TTL from config/mac1-dns/dnsmasq.conf ===
+
+=== 1. Short, visible TTL ===
+  $ auth
+    app.team1.test.		30	IN	A	127.0.0.1
+  [PASS] authoritative answer carries TTL 30 (local-ttl=30)
+
+=== 2. Client resolves and caches app.team1.test ===
+    client: app.team1.test -> 127.0.0.1  (TTL left: 29)
+  [PASS] client has the current record 127.0.0.1
+
+=== 3. Change the record to a different IP (10.7.24.9) ===
+  $ auth
+    app.team1.test.		30	IN	A	10.7.24.9
+  [PASS] DNS server now answers 10.7.24.9
+
+=== 4. Client keeps the cached OLD answer until the TTL expires ===
+    t=+0s  client -> 127.0.0.1   ttl-left=29
+    t=+3s  client -> 127.0.0.1   ttl-left=26
+    t=+6s  client -> 127.0.0.1   ttl-left=23
+    t=+9s  client -> 127.0.0.1   ttl-left=20
+    t=+12s  client -> 127.0.0.1   ttl-left=17
+    t=+15s  client -> 127.0.0.1   ttl-left=14
+    t=+18s  client -> 127.0.0.1   ttl-left=11
+    t=+21s  client -> 127.0.0.1   ttl-left=8
+    t=+24s  client -> 127.0.0.1   ttl-left=5
+    t=+27s  client -> 127.0.0.1   ttl-left=2
+    t=+30s  client -> 10.7.24.9   ttl-left=30
+  [PASS] client served the OLD (cached) answer after the change
+  [PASS] client switched to the NEW answer once the TTL expired (t=+30s, TTL 30 s)
+
+=== 5. Manual flush: change back to 127.0.0.1 and flush the client cache ===
+    right after the change, client still says: 10.7.24.9 (cached)
+  [PASS] without a flush the client still has the cached 10.7.24.9
+    flush: kill -HUP <client dnsmasq>   (Mac equivalent: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder)
+    right after the flush, client says: 127.0.0.1
+  [PASS] after the manual flush the new answer (127.0.0.1) appears IMMEDIATELY
+
+=== Explanation ===
+    The TTL is a promise from the DNS server: "you may reuse this answer for 30 s". Resolvers and
+    clients cache it and do not ask again until it expires, so a record change reaches each client
+    up to one TTL later. Flushing the cache forces a fresh lookup at once, but only on that machine.
+    Production cutover (Route 53, region/LB migration): lower the TTL a day ahead (one OLD TTL),
+    change the record, keep the old target running for at least one TTL, then retire it. Short TTL
+    = faster cutover but more DNS queries; long TTL = fewer queries but slow, uneven migration.
+
+=== RESULT: 7 passed, 0 failed (mode=local) ===

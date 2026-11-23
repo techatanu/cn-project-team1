@@ -1,0 +1,71 @@
+# extA test - mode=local - 2026-11-23 00:04:05 IST - host=Atanus-MacBook-Pro
+
+=== Setup (Mode 1): backends, edge, primary DNS :5300, backup DNS :5301, client cache :5302 ===
+    client resolver list: primary 127.0.0.1#5300, then backup 127.0.0.1#5301 (strict order)
+
+=== 1. Both DNS servers serve the same record ===
+  $ dig +noall +answer @127.0.0.1 -p 5300 app.team1.test
+    app.team1.test.		30	IN	A	127.0.0.1
+  $ dig +noall +answer @127.0.0.1 -p 5301 app.team1.test
+    app.team1.test.		30	IN	A	127.0.0.1
+  [PASS] primary answers app.team1.test -> 127.0.0.1
+  [PASS] backup  answers app.team1.test -> 127.0.0.1
+  [PASS] client resolves via its resolver list -> 127.0.0.1
+  [PASS] HTTPS through the edge works (200)
+    client log (who answered):
+      Nov 23 00:04:10 dnsmasq[16980]: reply app.team1.test is 127.0.0.1
+      Nov 23 00:04:10 dnsmasq[16980]: query[A] app.team1.test from 127.0.0.1
+      Nov 23 00:04:10 dnsmasq[16980]: cached app.team1.test is 127.0.0.1
+
+=== 2. Stop the PRIMARY DNS (like 'sudo brew services stop dnsmasq' on Mac 1) ===
+  $ dig +time=1 +tries=1 @127.0.0.1 -p 5300 app.team1.test
+    
+    ; <<>> DiG 9.10.6 <<>> +time=1 +tries=1 @127.0.0.1 -p 5300 app.team1.test
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; connection timed out; no servers could be reached
+  [PASS] primary is down (no answer)
+    client cache flushed (same idea as: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder)
+  $ dig +noall +answer +stats @127.0.0.1 -p 5302 app.team1.test
+    app.team1.test.		30	IN	A	127.0.0.1
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+    ;; WHEN: Mon Nov 23 00:04:18 IST 2026
+    ;; MSG SIZE  rcvd: 59
+    
+  [PASS] client STILL resolves app.team1.test -> 127.0.0.1 (via backup)
+  [PASS] backup DNS log shows it answered the query
+    backup log:
+      Nov 23 00:04:18 dnsmasq[16967]: query[A] app.team1.test from 127.0.0.1
+      Nov 23 00:04:18 dnsmasq[16967]: /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/.sim/team1.hosts app.team1.test is 127.0.0.1
+  [PASS] HTTPS still works with primary DNS down (200)
+
+=== 3a. APPLICATION failure: DNS fine, both backends stopped ===
+  [PASS] name still resolves -> 127.0.0.1 (DNS layer OK)
+  $ /usr/bin/curl -s -o /dev/null -w HTTP %{http_code}  connect=%{time_connect}s tls=%{time_appconnect}s\n --resolve app.team1.test:8443:127.0.0.1 --cacert /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/config/mac2-edge/tls/team1-ca.crt https://app.team1.test:8443/api/status
+    HTTP 502  connect=0.000480s tls=0.002581s
+  [PASS] TCP + TLS to the edge succeed but HTTP is 502 (app layer down)
+
+=== 3b. DNS failure: backends fine, BOTH DNS servers stopped ===
+  $ dig +time=1 +tries=1 @127.0.0.1 -p 5302 app.team1.test
+    
+    ; <<>> DiG 9.10.6 <<>> +time=1 +tries=1 @127.0.0.1 -p 5302 app.team1.test
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; connection timed out; no servers could be reached
+  [PASS] name does NOT resolve (no A record returned)
+    no IP -> the client never opens a TCP connection; curl would stop with
+    'curl: (6) Could not resolve host: app.team1.test' even though the edge and backends are up:
+    (waiting 6 s: in 3a nginx marked both backends down for fail_timeout=5s)
+  [PASS]   ...and the edge itself is healthy (200 when reached by IP)
+
+=== Explanation ===
+    DNS failure:  the client cannot turn app.team1.test into an IP, so it never opens a TCP
+                  connection. curl ends with "(6) Could not resolve host". Edge and backends may be
+                  perfectly healthy. A backup resolver in the client's list removes this single point
+                  of failure; the client retries the next server after a short timeout.
+    App failure:  DNS answers, TCP 3-way handshake + TLS handshake with the edge succeed, but the edge
+                  has no healthy backend, so nginx returns HTTP 502 Bad Gateway. The fix is on the
+                  server side (restart backends / HA), not in DNS.
+
+=== RESULT: 12 passed, 0 failed (mode=local) ===

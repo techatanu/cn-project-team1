@@ -1,6 +1,6 @@
 # Evidence index
 
-`pNN_*.png` files are pages of our recorded chat/evidence log (`Cn_Chat.pdf`, 2 Oct 2026); `mac2_*` files were
+`pNN_*.png` files are pages of our shared evidence log (2 Oct 2026); `mac2_*` files were
 exported directly from Mac 2. `optional_screenshots_3oct.pdf` holds the original terminal outputs, from all three Macs, for the 3 Oct re-checks. Status: ✅ present · ⬜ still to add.
 
 | Folder | Task | Present | Still to add |
@@ -13,3 +13,5 @@ exported directly from Mac 2. `optional_screenshots_3oct.pdf` holds the original
 | [F-caching](F-caching) | F – Caching | `curl -I` cache headers + ETag; 304 from A and B; DevTools 304 and `(disk cache)`; log 200/304 | — |
 | [G-capture](G-capture) | G – Capture | `phase1_full_flow.pcapng` + tshark summary; DNS (pkt 240 TTL 60 screenshot), TCP, TLS 1.2/1.3, Certificate, encrypted data, plain-HTTP edge→backend, Conversations | — |
 | [failures](failures) | 6.3 / form D3 | ✅ **Option A, one backend stopped** (3 Oct 2026): before/after loops, lsof, nginx error + access log, curl refused, ping OK, restore. Also the accidental wrong-record `dig` (10.7.7.111) and `mac2_nginx_error.log` | the other four scenarios are optional (procedure in report 7.2) |
+
+**Phase 2 DNS query logs** (`phase2/lan/*/**/dnsmasq.log`, `dnsmasq-backup.log`): these are filtered to the `team1.test` lookups and the dnsmasq start-up / config / shutdown lines. The servers also logged every unrelated internet lookup made by the three members' laptops during the sessions; those lines were removed for privacy. No `team1.test` line was removed or changed.

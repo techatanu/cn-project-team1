@@ -1,0 +1,148 @@
+# extF test - mode=local - 2026-11-23 00:12:58 IST - host=Atanus-MacBook-Pro
+
+=== Setup (Mode 1): full stack ===
+
+=== Baseline: healthy system ===
+  | Diagnosing https://app.team1.test  (mode=local, expected edge IP 127.0.0.1, port 8443)
+  | 
+  | [1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  |   $ dig @127.0.0.1 -p 5302 app.team1.test
+  |     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18779
+  |     app.team1.test.		30	IN	A	127.0.0.1
+  |     ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+  |   [OK] app.team1.test -> 127.0.0.1 (the edge)
+  | 
+  | [2/4 TCP] Can we complete the 3-way handshake to 127.0.0.1:8443?
+  |   $ curl --connect-timeout 3 http://127.0.0.1:8443/ (exit 7 = refused, 28 = timeout)
+  |   [OK] TCP handshake to 127.0.0.1:8443 completed
+  | 
+  | [3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  |   $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:8443:127.0.0.1 --cacert /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/config/mac2-edge/tls/team1-ca.crt https://app.team1.test:8443/api/status
+  |   certificate presented by the server:
+  |     subject=C=IN, O=Team1 CN Project, CN=app.team1.test
+  |     issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+  |     DNS:app.team1.test, DNS:api.team1.test
+  |   [OK] certificate trusted and valid for app.team1.test (no -k used)
+  | 
+  | [4/4 HTTP] Does the application answer correctly through the edge?
+  |     HTTP 200 backend=B edge=primary
+  |   [OK] HTTP 200 - all four layers healthy
+  [PASS] diagnose.sh stops at layer 0 (Baseline: healthy system) - got 0
+
+=== Fault 1: DNS returns a wrong IP ===
+  INJECTED: DNS now answers app.team1.test -> 10.7.31.250 (edge is 127.0.0.1).
+  | Diagnosing https://app.team1.test  (mode=local, expected edge IP 127.0.0.1, port 8443)
+  | 
+  | [1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  |   $ dig @127.0.0.1 -p 5302 app.team1.test
+  |     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63192
+  |     app.team1.test.		30	IN	A	10.7.31.250
+  |     ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+  | 
+  |   >>> VERDICT: fault at the DNS layer (layer 1): resolves to 10.7.31.250 but the edge is 127.0.0.1 (wrong record)
+  |       - compare servers: dig +short @127.0.0.1 -p 5300 app.team1.test ; dig +short @127.0.0.1 -p 5301 app.team1.test
+  |       - fix the record on the DNS Mac: cat /opt/homebrew/etc/team1.hosts ; ./set_record.sh 127.0.0.1 (sends SIGHUP)
+  |       - then flush the client: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+  [PASS] diagnose.sh stops at layer 1 (Fault 1: DNS returns a wrong IP) - got 1
+  RESTORED (was: dns-wrong-ip).
+  [PASS] after restore all 4 layers are healthy again
+
+=== Fault 2: TLS certificate name mismatch ===
+  fault cert: CN/SAN wrong.team1.test, signed by Team1 Local CA (pure NAME mismatch)
+  INJECTED: the edge now presents a certificate for wrong.team1.test.
+  | Diagnosing https://app.team1.test  (mode=local, expected edge IP 127.0.0.1, port 8443)
+  | 
+  | [1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  |   $ dig @127.0.0.1 -p 5302 app.team1.test
+  |     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20657
+  |     app.team1.test.		29	IN	A	127.0.0.1
+  |     ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+  |   [OK] app.team1.test -> 127.0.0.1 (the edge)
+  | 
+  | [2/4 TCP] Can we complete the 3-way handshake to 127.0.0.1:8443?
+  |   $ curl --connect-timeout 3 http://127.0.0.1:8443/ (exit 7 = refused, 28 = timeout)
+  |   [OK] TCP handshake to 127.0.0.1:8443 completed
+  | 
+  | [3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  |   $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:8443:127.0.0.1 --cacert /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/config/mac2-edge/tls/team1-ca.crt https://app.team1.test:8443/api/status
+  |   certificate presented by the server:
+  |     subject=C=IN, O=Team1 CN Project, CN=wrong.team1.test
+  |     issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+  |     DNS:wrong.team1.test
+  | 
+  |   >>> VERDICT: fault at the TLS layer (layer 3): certificate rejected by the client: curl: (60) SSL: no alternative certificate subject name matches target host name 'app.team1.test'
+  | More details here: https://curl.se/docs/sslcerts.html
+  | 
+  | curl failed to verify the legitimacy of the server and therefore could not
+  | establish a secure connection to it. To learn more about this situation and
+  | how to fix it, please visit the web page mentioned above.
+  |       - name mismatch -> the SAN above must contain DNS:app.team1.test (nginx ssl_certificate points at the wrong file?)
+  |       - untrusted issuer -> install team1-ca.crt: sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain team1-ca.crt
+  |       - on the edge: grep ssl_certificate /opt/homebrew/etc/nginx/servers/*.conf ; nginx -t ; nginx -s reload
+  [PASS] diagnose.sh stops at layer 3 (Fault 2: TLS certificate name mismatch) - got 3
+  RESTORED (was: tls-cert-mismatch).
+  [PASS] after restore all 4 layers are healthy again
+
+=== Fault 3: TCP port of the edge blocked (pf drop) ===
+  pf rule loaded in anchor com.apple/team1-fault:
+    block drop in quick on lo0 proto tcp from any to any port = 8443
+  INJECTED: TCP to the edge port(s) is silently dropped.
+  | Diagnosing https://app.team1.test  (mode=local, expected edge IP 127.0.0.1, port 8443)
+  | 
+  | [1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  |   $ dig @127.0.0.1 -p 5302 app.team1.test
+  |     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 30914
+  |     app.team1.test.		22	IN	A	127.0.0.1
+  |     ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+  |   [OK] app.team1.test -> 127.0.0.1 (the edge)
+  | 
+  | [2/4 TCP] Can we complete the 3-way handshake to 127.0.0.1:8443?
+  |   $ curl --connect-timeout 3 http://127.0.0.1:8443/ (exit 7 = refused, 28 = timeout)
+  | 
+  |   >>> VERDICT: fault at the TCP layer (layer 2): connection TIMED OUT: SYNs get no answer -> dropped by a firewall, or host unreachable
+  |       - is the host up? ping -c 3 127.0.0.1
+  |       - firewall on the edge? sudo pfctl -s info | head -1 ; sudo pfctl -sr ; sudo pfctl -a com.apple/team1-fault -sr
+  |       - Wireshark/tcpdump: tcp.port==8443 shows SYN retransmissions, never a SYN-ACK
+  [PASS] diagnose.sh stops at layer 2 (Fault 3: TCP port of the edge blocked (pf drop)) - got 2
+  RESTORED (was: tcp-port-blocked-edge).
+  [PASS] after restore all 4 layers are healthy again
+
+=== Fault 4: backend ports blocked behind the edge (pf drop) ===
+  pf rule loaded in anchor com.apple/team1-fault:
+    block drop out quick on lo0 proto tcp from any to any port = 3001
+    block drop out quick on lo0 proto tcp from any to any port = 3002
+  INJECTED: TCP to the backend port(s) is silently dropped.
+  | Diagnosing https://app.team1.test  (mode=local, expected edge IP 127.0.0.1, port 8443)
+  | 
+  | [1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  |   $ dig @127.0.0.1 -p 5302 app.team1.test
+  |     ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38068
+  |     app.team1.test.		13	IN	A	127.0.0.1
+  |     ;; SERVER: 127.0.0.1#5302(127.0.0.1)
+  |   [OK] app.team1.test -> 127.0.0.1 (the edge)
+  | 
+  | [2/4 TCP] Can we complete the 3-way handshake to 127.0.0.1:8443?
+  |   $ curl --connect-timeout 3 http://127.0.0.1:8443/ (exit 7 = refused, 28 = timeout)
+  |   [OK] TCP handshake to 127.0.0.1:8443 completed
+  | 
+  | [3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  |   $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:8443:127.0.0.1 --cacert /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/config/mac2-edge/tls/team1-ca.crt https://app.team1.test:8443/api/status
+  |   certificate presented by the server:
+  |     subject=C=IN, O=Team1 CN Project, CN=app.team1.test
+  |     issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+  |     DNS:app.team1.test, DNS:api.team1.test
+  |   [OK] certificate trusted and valid for app.team1.test (no -k used)
+  | 
+  | [4/4 HTTP] Does the application answer correctly through the edge?
+  |     HTTP 502 backend=- edge=primary
+  | 
+  |   >>> VERDICT: fault at the HTTP layer (layer 4): edge is fine but cannot get an answer from the backends (HTTP 504)
+  |       - 502 = backend refused/closed (process down); 504 = backend timed out (firewall drop / hung)
+  |       - on the edge: tail -n 5 /opt/homebrew/var/log/nginx/error.log   (connect() failed / upstream timed out)
+  |       - from the edge: curl -m 3 http://10.7.7.111:3001/api/status ; curl -m 3 http://10.7.7.111:3002/api/status
+  |       - on Mac 3: ./mac3.sh status ; sudo pfctl -a com.apple/team1 -sr
+  [PASS] diagnose.sh stops at layer 4 (Fault 4: backend ports blocked behind the edge (pf drop)) - got 4
+  RESTORED (was: tcp-port-blocked-backend).
+  [PASS] after restore all 4 layers are healthy again
+
+=== RESULT: 9 passed, 0 failed (mode=local) ===

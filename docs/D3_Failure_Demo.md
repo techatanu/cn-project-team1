@@ -25,7 +25,7 @@ Only nginx's TCP connection to port 3001 was refused: Mac 3 sent a TCP RST, erro
 
 **(5) How we restored the system:** On Mac 3 we ran `python3 backend.py A 3001` again, and it printed `Backend A listening on 0.0.0.0:3001`. Its log immediately showed requests from nginx (`10.7.16.45 … "GET /api/status HTTP/1.1" 200`). At 11:17:51 the loop on Mac 1 returned `X-Backend: B, B, A, B, A, B`, and the access log shows `3002, 3002, 3001, 3002, 3001, 3002`. Both backends are back in the rotation.
 
-## Run sheet (for re-recording the video)
+## Step-by-Step Demonstration Sequence (Option A)
 
 | Step | Mac | Command / action | What you should see |
 |---|---|---|---|

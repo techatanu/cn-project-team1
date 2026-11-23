@@ -1,0 +1,51 @@
+2026/11/23 14:50:37 [error] 31383#0: *759 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 14:51:06 [notice] 40862#0: signal process started
+2026/11/23 15:09:28 [error] 40889#0: *133 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:09:35 [error] 40889#0: *160 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3002/api/status", host: "app.team1.test"
+2026/11/23 15:09:36 [error] 40889#0: *160 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:09:37 [error] 40889#0: *163 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:37 [error] 40889#0: *164 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:37 [error] 40889#0: *165 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:38 [error] 40889#0: *166 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:38 [error] 40889#0: *167 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:38 [error] 40889#0: *168 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:39 [error] 40889#0: *169 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:39 [error] 40889#0: *170 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:39 [error] 40889#0: *171 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:39 [error] 40889#0: *172 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:40 [error] 40889#0: *173 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:40 [error] 40889#0: *174 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:40 [error] 40889#0: *175 no live upstreams while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://team1_backends/api/status", host: "app.team1.test"
+2026/11/23 15:09:43 [error] 40889#0: *184 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:09:51 [error] 40889#0: *219 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:09:58 [error] 40889#0: *254 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:10:06 [error] 40889#0: *285 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:10:14 [error] 40889#0: *320 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:10:36 [error] 40889#0: *415 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3002/api/status", host: "app.team1.test"
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:35 [emerg] 42810#0: still could not bind()
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:8080 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: bind() to 0.0.0.0:443 failed (48: Address already in use)
+2026/11/23 15:15:38 [emerg] 42825#0: still could not bind()
+2026/11/23 15:16:44 [error] 40889#0: *486 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:16:51 [error] 40889#0: *521 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:16:58 [error] 40889#0: *552 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:17:06 [error] 40889#0: *585 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"
+2026/11/23 15:17:14 [error] 40889#0: *616 upstream timed out (60: Operation timed out) while connecting to upstream, client: 10.7.23.243, server: app.team1.test, request: "GET /api/status HTTP/2.0", upstream: "http://10.7.24.9:3001/api/status", host: "app.team1.test"

@@ -1,0 +1,55 @@
+# extE test - mode=local - 2026-11-23 03:13:57 IST - host=app
+
+=== Setup (Mode 1): primary edge 127.0.0.1:8443, standby edge 10.7.16.45:8443, record -> 127.0.0.1 ===
+    Mode 1 roles: primary edge = 127.0.0.1, standby edge = 10.7.16.45 (this Mac's own Wi-Fi address standing in
+    for Mac 3 - it is NOT Mac 2's LAN role here)
+
+=== 1. Both edges are up and identical except X-Edge ===
+    primary edge 127.0.0.1: 200 backend=A edge=primary
+    standby edge 10.7.16.45: 200 backend=A edge=standby
+  [PASS] primary edge serves (X-Edge: primary)
+  [PASS] standby edge serves (X-Edge: standby)
+
+=== 2. Client resolves and caches the CURRENT record ===
+    client cache: app.team1.test -> 127.0.0.1 (TTL left: 30)
+  [PASS] client is on the primary edge (127.0.0.1)
+    client request: 200 backend=A edge=primary
+
+=== 3. CUTOVER: change the A record to the standby edge (10.7.16.45) ===
+    authoritative DNS now answers: app.team1.test -> 10.7.16.45
+  [PASS] a NEW lookup (empty cache) gets the standby edge at once
+    cached client still has: 127.0.0.1 (TTL left: 30)
+  [PASS] the CACHED client still gets the OLD answer (TTL not expired)
+  [PASS] ...so it still hits the OLD edge: primary
+
+=== 4. Watching the cached client until its TTL runs out (TTL=30 s) ===
+    t=+0s  client -> 127.0.0.1  ttl-left=30  200 backend=B edge=primary
+    t=+3s  client -> 127.0.0.1  ttl-left=27  200 backend=A edge=primary
+    t=+6s  client -> 127.0.0.1  ttl-left=24  200 backend=B edge=primary
+    t=+10s  client -> 127.0.0.1  ttl-left=20  200 backend=A edge=primary
+    t=+13s  client -> 127.0.0.1  ttl-left=17  200 backend=B edge=primary
+    t=+16s  client -> 127.0.0.1  ttl-left=14  200 backend=A edge=primary
+    t=+19s  client -> 127.0.0.1  ttl-left=11  200 backend=B edge=primary
+    t=+22s  client -> 127.0.0.1  ttl-left=8  200 backend=A edge=primary
+    t=+25s  client -> 127.0.0.1  ttl-left=5  200 backend=B edge=primary
+    t=+28s  client -> 127.0.0.1  ttl-left=2  200 backend=A edge=primary
+    t=+31s  client -> 10.7.16.45  ttl-left=30  200 backend=A edge=standby
+  [PASS] client moved to the standby edge after its cache expired (t=+31s, TTL 30 s)
+  [PASS] client is now served by X-Edge: standby
+
+=== 5. Old edge can now be drained / stopped without user impact ===
+  [PASS] the primary edge 127.0.0.1 is really down
+  [PASS] with the primary edge stopped, the client still gets 200 (via standby 10.7.16.45)
+
+=== 6. Roll back the record to the primary edge ===
+    record -> 127.0.0.1
+
+=== Explanation ===
+    DNS-based cutover moves NEW lookups instantly, but every resolver/client that already cached the
+    old answer keeps using the old edge until its TTL expires. So: lower the TTL well before a
+    migration (we use 30 s), keep the old edge running for at least one TTL (plus slack for clients
+    that ignore TTL), then drain it. This is how production traffic is shifted between regions/load
+    balancers with Route 53 weighted/failover records. It is NOT instant failover: for that you need
+    a shared virtual IP (VRRP/keepalived) or an anycast/managed load balancer (see Ext D).
+
+=== RESULT: 10 passed, 0 failed (mode=local) ===

@@ -1,0 +1,122 @@
+# mac1-package test - mode=local - 2026-11-23 01:00:26 IST - host=Atanus-MacBook-Pro
+
+=== 1. Build and inspect the zip ===
+built dist/mac1-prince-dns.zip (25 files, no *.key)
+  $ unzip -l /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/dist/mac1-prince-dns.zip
+    Archive:  /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/dist/mac1-prince-dns.zip
+      Length      Date    Time    Name
+    ---------  ---------- -----   ----
+            0  11-23-2026 01:00   mac1-prince-dns/
+         4981  11-23-2026 01:00   mac1-prince-dns/mac1.sh
+         5835  11-23-2026 01:00   mac1-prince-dns/README_PRINCE.md
+            0  11-23-2026 01:00   mac1-prince-dns/config/
+            0  11-23-2026 01:00   mac1-prince-dns/config/mac2-edge/
+            0  11-23-2026 01:00   mac1-prince-dns/config/mac2-edge/tls/
+         1212  11-23-2026 01:00   mac1-prince-dns/config/mac2-edge/tls/team1-ca.crt
+            0  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/
+         1124  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/set_record.sh
+          170  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/team1.hosts
+         2186  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/README.md
+         1749  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/start_primary_dns.sh
+          658  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/dnsmasq.conf
+          397  11-23-2026 01:00   mac1-prince-dns/config/mac1-dns/stop_primary_dns.sh
+            0  11-23-2026 01:00   mac1-prince-dns/scripts/
+            0  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/
+         6151  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/inject_fault.sh
+         5986  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/diagnose.sh
+          275  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/lan.env
+         4525  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/test_extB_ttl_cutover.sh
+         3794  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/test_extC_firewall.sh
+         7047  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/test_extA_dns_failover.sh
+        11664  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/lib.sh
+         5371  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/test_extE_edge_migration.sh
+         4643  11-23-2026 01:00   mac1-prince-dns/scripts/phase2/test_extD_ha_failover.sh
+    ---------                     -------
+        67768                     25 files
+  [PASS] zip contains NO private key
+  [PASS] zip has README_PRINCE.md
+  [PASS] zip has mac1.sh
+  [PASS] zip has config/mac1-dns/dnsmasq.conf
+  [PASS] zip has config/mac1-dns/team1.hosts
+  [PASS] zip has config/mac1-dns/start_primary_dns.sh
+  [PASS] zip has config/mac1-dns/set_record.sh
+  [PASS] zip has config/mac2-edge/tls/team1-ca.crt
+  [PASS] zip has scripts/phase2/lib.sh
+  [PASS] zip has scripts/phase2/lan.env
+  [PASS] zip has scripts/phase2/test_extA_dns_failover.sh
+  [PASS] zip has scripts/phase2/test_extB_ttl_cutover.sh
+  [PASS] zip has scripts/phase2/test_extC_firewall.sh
+  [PASS] zip has scripts/phase2/test_extD_ha_failover.sh
+  [PASS] zip has scripts/phase2/test_extE_edge_migration.sh
+  [PASS] zip has scripts/phase2/diagnose.sh
+  [PASS] zip has scripts/phase2/inject_fault.sh
+  [PASS] set_record.sh identical on Mac 1 and Mac 3
+  [PASS] scripts executable after unzip
+  $ ./mac1.sh
+    Mac 1 (Prince) - primary DNS + test client: one entry point for every Phase 2 job.
+      ./mac1.sh start | stop          primary DNS (dnsmasq, :53, TTL 30) on / off      (sudo)
+      ./mac1.sh status                self-test: PASS/FAIL for DNS, client settings, CA, HTTPS
+      ./mac1.sh dns-stop | dns-start  Ext A: stop / start the primary DNS
+      ./mac1.sh dns-set <ip>          Ext B/E: change the A record (Mac 3 runs the same)
+      ./mac1.sh client-setup          this Mac resolves via 127.0.0.1 (itself) then 10.7.24.9 (backup)
+      ./mac1.sh client-restore        normal internet DNS again (after the project)
+      ./mac1.sh test-a|test-b|test-c|test-d|test-e   run the LAN test for that extension (client side)
+      ./mac1.sh diagnose              Ext F: DNS -> TCP -> TLS -> HTTP check, stops at the broken layer
+      ./mac1.sh fault-dns | fault-restore             Ext F fault test: wrong DNS record / undo
+      ./mac1.sh collect               zip all test outputs + logs -> AirDrop it to Atanu
+    Tests save to evidence/phase2/<ext>/lan_run.txt; other commands append to evidence/phase2/mac1/session_<date>.txt
+    Mode 1 local test on one Mac (no sudo, port 5300):  DNS_PORT=5300 ./mac1.sh start|status|dns-set|stop
+    D="$(cd "$(dirname "$0")" && pwd)"
+  [PASS] help lists the commands
+
+=== 2. ./mac1.sh start + status (local test port 5300) ===
+  $ ./mac1.sh start
+    
+    ##### 2026-11-23 01:00:26  ./mac1.sh start
+    dig @127.0.0.1 -p 5300 app.team1.test:
+      app.team1.test.		30	IN	A	10.7.16.45
+      api.team1.test.		30	IN	A	10.7.16.45
+  $ ./mac1.sh status
+    
+    ##### 2026-11-23 01:00:28  ./mac1.sh status
+    Mac 1 self-test  (2026-11-23 01:00:28, DNS port 5300)
+    IP addresses: 10.7.16.45   (expected 10.7.23.243)
+      [PASS] Primary DNS answers app.team1.test
+      [PASS] TTL is 30 s (Ext B)
+            record: app.team1.test.		30	IN	A	10.7.16.45
+    Result: 2 passed, 0 failed
+  [PASS] primary DNS answers 10.7.16.45
+  [PASS] TTL is 30
+
+=== 3. ./mac1.sh dns-set (Ext B / E) ===
+  $ ./mac1.sh dns-set 10.7.24.9
+    
+    ##### 2026-11-23 01:00:28  ./mac1.sh dns-set 10.7.24.9
+    record now:
+      app.team1.test.		30	IN	A	10.7.24.9
+  [PASS] record changed to 10.7.24.9 without restart
+  $ ./mac1.sh dns-set 10.7.16.45
+    
+    ##### 2026-11-23 01:00:29  ./mac1.sh dns-set 10.7.16.45
+    record now:
+      app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] record rolled back
+
+=== 4. LAN test scripts inside the zip load cleanly ===
+  [PASS] bash -n scripts/phase2/test_extA_dns_failover.sh
+  [PASS] bash -n scripts/phase2/test_extB_ttl_cutover.sh
+  [PASS] bash -n scripts/phase2/test_extC_firewall.sh
+  [PASS] bash -n scripts/phase2/test_extD_ha_failover.sh
+  [PASS] bash -n scripts/phase2/test_extE_edge_migration.sh
+  [PASS] bash -n scripts/phase2/diagnose.sh
+  [PASS] bash -n scripts/phase2/inject_fault.sh
+  [PASS] LAN mode picks the real IPs (edge 10.7.16.45:443, DNS 10.7.23.243 + 10.7.24.9)
+
+=== 5. ./mac1.sh stop ===
+  $ ./mac1.sh stop
+    
+    ##### 2026-11-23 01:00:29  ./mac1.sh stop
+    primary DNS stopped
+  [PASS] primary DNS stopped
+
+=== RESULT: 33 passed, 0 failed (mode=local) ===

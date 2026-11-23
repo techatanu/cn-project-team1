@@ -1,0 +1,58 @@
+# extC test - mode=local - 2026-11-23 00:13:41 IST - host=Atanus-MacBook-Pro
+sudo is needed for pfctl:
+
+=== Setup (Mode 1): backends :3001/:3002 on 0.0.0.0, edge 127.0.0.1:8443 ===
+    Mode 1 roles: edge = nginx on 127.0.0.1; 'client' = direct connection to 10.7.16.45 (this Mac's own Wi-Fi address,
+    used only as a non-edge source address - it is NOT Mac 2's LAN role here)
+
+=== 1. BEFORE: client can bypass the edge ===
+    direct http://10.7.16.45:3001 -> HTTP 200 (curl exit 0)
+  [PASS] direct access to Backend A works (this is the problem)
+  [PASS] edge works (200)
+
+=== 2. Firewall ON (rollback copy saved first) ===
+[1/4] Rollback copy of the current pf state -> /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/.sim/pf/
+      status before: Status: Disabled for 0 days 00:00:12          Debug: Urgent
+[2/4] Main ruleset must reference the com.apple/* anchors (macOS default /etc/pf.conf)
+[3/4] Loading /Users/atanuadhikari/Desktop/Cp_Project/cn-project-team1/config/mac3-backends/pf_team1.conf into anchor com.apple/team1 (ext_if=lo0 edge=127.0.0.1)
+      pass in quick on lo0 inet proto tcp from 127.0.0.1 to any port = 3001 flags S/SA keep state
+      pass in quick on lo0 inet proto tcp from 127.0.0.1 to any port = 3002 flags S/SA keep state
+      block drop in quick on lo0 proto tcp from any to any port = 3001
+      block drop in quick on lo0 proto tcp from any to any port = 3002
+[4/4] Enabling pf (reference-counted token, so disabling never breaks other pf users)
+      pf enabled
+      Token : 3150858674323349620
+Firewall ON. Test from another Mac: curl -m 3 http://<mac3>:3001/  -> must time out.
+
+=== 3. Edge still reaches both backends, direct client access is blocked ===
+    via edge, request 1: 200 backend=B edge=primary
+    via edge, request 2: 200 backend=A edge=primary
+    via edge, request 3: 200 backend=B edge=primary
+    via edge, request 4: 200 backend=A edge=primary
+    via edge, request 5: 200 backend=B edge=primary
+    via edge, request 6: 200 backend=A edge=primary
+  [PASS] edge -> Backend A allowed (X-Backend: A seen)
+  [PASS] edge -> Backend B allowed (X-Backend: B seen)
+  $ /usr/bin/curl -sS -m 5 --connect-timeout 3 http://10.7.16.45:3001/api/status
+    curl: (28) Failed to connect to 10.7.16.45 port 3001 after 3006 ms: Timeout was reached
+  [PASS] direct http://10.7.16.45:3001 is BLOCKED (HTTP 000, curl exit 28 = 28 timeout)
+  $ /usr/bin/curl -sS -m 5 --connect-timeout 3 http://10.7.16.45:3002/api/status
+    curl: (28) Failed to connect to 10.7.16.45 port 3002 after 3007 ms: Timeout was reached
+  [PASS] direct http://10.7.16.45:3002 is BLOCKED (HTTP 000, curl exit 28 = 28 timeout)
+    timeout (exit 28) = packets silently DROPPED by a firewall.
+    'Connection refused' (exit 7) would mean the host answered with RST = nothing listening.
+
+=== 4. Rollback: firewall OFF, original configuration restored ===
+[1/3] Flushing anchor com.apple/team1
+[2/3] Releasing our pf enable token
+      No ALTQ support in kernel
+      ALTQ related functions disabled
+      pf disabled
+[3/3] Verifying the original configuration is back
+      anchor com.apple/team1 is empty: OK
+      main ruleset identical to the rollback copy: OK
+      pf Status: Disabled for 0 days 00:00:00          Debug: Urgent
+Firewall OFF (rolled back).
+  [PASS] after rollback direct access works again (HTTP 200)
+
+=== RESULT: 7 passed, 0 failed (mode=local) ===
