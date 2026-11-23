@@ -1,0 +1,10 @@
+Mac 3 self-test  (2026-11-23 15:20:20, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] Standby edge on :443 returns 200 with X-Edge: standby
+  [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+Result: 5 passed, 0 failed

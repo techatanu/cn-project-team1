@@ -1,0 +1,18 @@
+Backend A listening on 0.0.0.0:3001  (Ctrl+C to stop)
+127.0.0.1 - - [23/Nov/2026 15:17:17] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:21] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:21] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:22] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:23] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:24] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:26] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:26] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:27] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:28] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:29] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:30] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:30] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:31] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:17:32] "GET /api/status HTTP/1.1" 200 -
+10.7.16.45 - - [23/Nov/2026 15:19:43] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [23/Nov/2026 15:20:20] "GET /api/status HTTP/1.1" 200 -

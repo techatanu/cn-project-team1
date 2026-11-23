@@ -1,0 +1,3 @@
+# team1.test A records (same file on Mac 1 primary and Mac 3 backup)
+# Both names point at the EDGE (Mac 2), never at a backend.
+10.7.16.45 app.team1.test api.team1.test

@@ -1,0 +1,350 @@
+
+##### 2026-11-23 01:05:57  ./mac3.sh start
+Backend A (pid 23584): {"backend": "A", "status": "ok", "time": "2026-11-22T19:36:03.875859+00:00"}
+Backend B (pid 23601): {"backend": "B", "status": "ok", "time": "2026-11-22T19:36:09.571867+00:00"}
+Backed up the old /opt/homebrew/etc/dnsmasq.conf
+dnsmasq: syntax check OK.
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 01:06:24  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 01:06:24, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+  [OFF ] firewall (Ext C) not active
+Result: 4 passed, 0 failed
+
+##### 2026-11-23 01:23:11  ./mac3.sh dns-start
+dnsmasq: syntax check OK.
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 01:38:25  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 01:38:25, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+  [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+Result: 4 passed, 0 failed
+
+##### 2026-11-23 02:07:27  ./mac3.sh start
+Backend A: port 3001 already in use (already running?)
+Backend B: port 3002 already in use (already running?)
+dnsmasq: syntax check OK.
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 02:07:57  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 02:07:57, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+  [OFF ] firewall (Ext C) not active
+Result: 4 passed, 0 failed
+
+##### 2026-11-23 02:21:00  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 02:21:00, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+  [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+Result: 4 passed, 0 failed
+
+##### 2026-11-23 02:23:36  ./mac3.sh backends-stop
+Backend A stopped
+Backend B stopped
+
+##### 2026-11-23 02:24:45  ./mac3.sh backends-start
+Backend A (pid 38033): {"backend": "A", "status": "ok", "time": "2026-11-22T20:54:51.451736+00:00"}
+Backend B (pid 38066): {"backend": "B", "status": "ok", "time": "2026-11-22T20:54:57.149895+00:00"}
+
+##### 2026-11-23 02:25:17  ./mac3.sh dns-stop
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+
+##### 2026-11-23 02:26:25  ./mac3.sh dns-start
+dnsmasq: syntax check OK.
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 02:27:57  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 02:28:40  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 02:31:45  ./mac3.sh start
+Backend A: port 3001 already in use (already running?)
+Backend B: port 3002 already in use (already running?)
+dnsmasq: syntax check OK.
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 02:32:01  ./mac3.sh standby-on
+Missing /opt/homebrew/etc/nginx/certs/app.team1.test.crt - AirDrop it from Atanu into /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/config/mac3-standby-edge/certs/
+
+##### 2026-11-23 02:33:18  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 02:35:10  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 02:36:39  ./mac3.sh standby-off
+standby edge was not running
+
+##### 2026-11-23 02:37:51  ./mac3.sh kill-a
+Backend A stopped
+
+##### 2026-11-23 02:39:11  ./mac3.sh revive-a
+Backend A (pid 41065): {"backend": "A", "status": "ok", "time": "2026-11-22T21:09:17.556926+00:00"}
+
+##### 2026-11-23 02:41:03  ./mac3.sh firewall-on
+[1/4] Rollback copy of the current pf state -> /Users/sambhavkumar/team1-pf-backup/
+      status before: Status: Disabled                              Debug: Urgent
+[2/4] Main ruleset must reference the com.apple/* anchors (macOS default /etc/pf.conf)
+[3/4] Loading /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/config/mac3-backends/pf_team1.conf into anchor com.apple/team1 (ext_if=en0 edge=10.7.16.45)
+      pass in quick on en0 inet proto tcp from 10.7.16.45 to any port = 3001 flags S/SA keep state
+      pass in quick on en0 inet proto tcp from 10.7.16.45 to any port = 3002 flags S/SA keep state
+      block drop in quick on en0 proto tcp from any to any port = 3001
+      block drop in quick on en0 proto tcp from any to any port = 3002
+[4/4] Enabling pf (reference-counted token, so disabling never breaks other pf users)
+      pf enabled
+      Token : 541495645147226026
+Firewall ON. Test from another Mac: curl -m 3 http://<mac3>:3001/  -> must time out.
+
+##### 2026-11-23 02:42:26  ./mac3.sh firewall-off
+[1/3] Flushing anchor com.apple/team1
+[2/3] Releasing our pf enable token
+      No ALTQ support in kernel
+      ALTQ related functions disabled
+      pf disabled
+[3/3] Verifying the original configuration is back
+      anchor com.apple/team1 is empty: OK
+      main ruleset identical to the rollback copy: OK
+      pf Status: Disabled for 0 days 00:00:00          Debug: Urgent
+Firewall OFF (rolled back).
+
+##### 2026-11-23 14:22:39  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 14:22:39, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [ -- ] standby edge not running (only needed for Ext E: ./mac3.sh standby-on)
+  [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+Result: 4 passed, 0 failed
+
+##### 2026-11-23 14:23:50  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 14:25:00  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 14:26:53  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 14:27:15  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 14:42:46  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 14:43:43  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 14:45:39  ./mac3.sh start
+Backend A: port 3001 already in use (already running?)
+Backend B: port 3002 already in use (already running?)
+Backed up the old /opt/homebrew/etc/dnsmasq.conf
+Listening on Wi-Fi device en0
+dnsmasq: syntax check OK.
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 14:45:54  ./mac3.sh standby-on
+nginx: the configuration file /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf syntax is ok
+nginx: configuration file /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf test is successful
+Standby edge on :443. Local check (X-Edge must be standby):
+  HTTP/2 200 
+  x-backend: A
+  x-edge: standby
+Access log: tail -f /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/access.log
+
+##### 2026-11-23 14:49:35  ./mac3.sh start
+Backend A: port 3001 already in use (already running?)
+Backend B: port 3002 already in use (already running?)
+Listening on Wi-Fi device en0
+dnsmasq: syntax check OK.
+Stopping `dnsmasq`... (might take a while)
+==> Successfully stopped `dnsmasq` (label: sh.brew.dnsmasq)
+Warning: Taking root:admin ownership of some dnsmasq paths:
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin
+  /opt/homebrew/Cellar/dnsmasq/2.93/sbin/dnsmasq
+  /opt/homebrew/opt/dnsmasq
+  /opt/homebrew/opt/dnsmasq/sbin
+  /opt/homebrew/var/homebrew/linked/dnsmasq
+This will require manual removal of these paths using `sudo rm` on
+brew upgrade/reinstall/uninstall.
+Root services will run Homebrew-installed software as root by default. Only use
+root services if you trust all users who can write to your Homebrew installation.
+==> Successfully started `dnsmasq` (label: sh.brew.dnsmasq)
+dig @127.0.0.1 -p 53 app.team1.test:
+  app.team1.test.		30	IN	A	10.7.16.45
+  api.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 14:49:41  ./mac3.sh standby-on
+nginx: the configuration file /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf syntax is ok
+nginx: configuration file /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/nginx.conf test is successful
+standby edge reloaded
+Standby edge on :443. Local check (X-Edge must be standby):
+  HTTP/2 200 
+  x-backend: A
+  x-edge: standby
+Access log: tail -f /Users/sambhavkumar/Downloads/mac3-sambhav-backends-backupdns/.run/standby-edge/access.log
+
+##### 2026-11-23 14:50:05  ./mac3.sh dns-set 10.7.24.9
+record now:
+  app.team1.test.		30	IN	A	10.7.24.9
+
+##### 2026-11-23 14:51:53  ./mac3.sh dns-set 10.7.16.45
+record now:
+  app.team1.test.		30	IN	A	10.7.16.45
+
+##### 2026-11-23 15:09:26  ./mac3.sh kill-a
+Backend A stopped
+
+##### 2026-11-23 15:10:20  ./mac3.sh revive-a
+Backend A (pid 52244): {"backend": "A", "status": "ok", "time": "2026-11-23T09:40:20.531002+00:00"}
+
+##### 2026-11-23 15:16:14  ./mac3.sh status
+Mac 3 self-test  (2026-11-23 15:16:14, DNS port 53, edge port 443)
+IP addresses: 10.7.24.9 
+  [PASS] Backend A answers on :3001 with X-Backend: A
+  [PASS] Backend B answers on :3002 with X-Backend: B
+  [PASS] Backends listen on ALL interfaces (not only 127.0.0.1)
+  [PASS] Backup DNS answers app.team1.test
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] Standby edge on :443 returns 200 with X-Edge: standby
+  [ ?? ] firewall state needs sudo: sudo pfctl -a com.apple/team1 -sr
+Result: 5 passed, 0 failed
+
+##### 2026-11-23 15:16:43  ./mac3.sh kill-a
+Backend A stopped
+
+##### 2026-11-23 15:17:17  ./mac3.sh revive-a
+Backend A (pid 52366): {"backend": "A", "status": "ok", "time": "2026-11-23T09:47:17.623538+00:00"}
+
+##### 2026-11-23 15:31:49  ./mac3.sh kill-a
+Backend A stopped
+
+##### 2026-11-23 15:32:20  ./mac3.sh revive-a
+Backend A (pid 52604): {"backend": "A", "status": "ok", "time": "2026-11-23T10:02:20.850008+00:00"}

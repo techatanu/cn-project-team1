@@ -1,0 +1,5 @@
+	inet 10.7.24.9 netmask 0xffffe000 broadcast 10.7.31.255
+python3.1 38066 sambhavkumar    3u  IPv4  0x7fdae2365de8db7      0t0  TCP *:3002 (LISTEN)
+nginx     51802 sambhavkumar    6u  IPv4  0x86c29b533ac648b      0t0  TCP *:443 (LISTEN)
+nginx     51999 sambhavkumar    6u  IPv4  0x86c29b533ac648b      0t0  TCP *:443 (LISTEN)
+python3.1 52366 sambhavkumar    3u  IPv4 0xadf7ab3446f44dcb      0t0  TCP *:3001 (LISTEN)
