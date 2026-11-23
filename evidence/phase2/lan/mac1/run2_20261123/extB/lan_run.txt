@@ -1,0 +1,63 @@
+# extB test - mode=lan - 2026-11-23 14:42:25 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): record app.team1.test -> 10.7.16.45; client cache = mDNSResponder on this Mac ===
+
+=== 1. Short, visible TTL ===
+  $ auth
+    app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] authoritative answer carries TTL 30 (local-ttl=30)
+    the backup DNS is changed first (the client asks the primary, so this does not touch its cache)
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.24.9   (backup DNS; not time-critical)
+  >>> Press Enter when done... 
+=== 2. Client resolves and caches app.team1.test ===
+    client: app.team1.test -> 10.7.16.45  (TTL left: n/a)
+  [PASS] client has the current record 10.7.16.45
+
+=== 3. Change the record to a different IP (10.7.24.9) ===
+    Mac 1 changes its own (primary) record now: ./mac1.sh dns-set 10.7.24.9
+      record now:
+        app.team1.test.		30	IN	A	10.7.24.9
+  $ auth
+    app.team1.test.		30	IN	A	10.7.24.9
+  [PASS] DNS server now answers 10.7.24.9
+
+=== 4. Client keeps the cached OLD answer until the TTL expires ===
+    t=+0s  client -> 10.7.16.45   ttl-left=n/a
+    t=+3s  client -> 10.7.16.45   ttl-left=n/a
+    t=+6s  client -> 10.7.16.45   ttl-left=n/a
+    t=+9s  client -> 10.7.16.45   ttl-left=n/a
+    t=+12s  client -> 10.7.16.45   ttl-left=n/a
+    t=+15s  client -> 10.7.16.45   ttl-left=n/a
+    t=+18s  client -> 10.7.16.45   ttl-left=n/a
+    t=+21s  client -> 10.7.16.45   ttl-left=n/a
+    t=+24s  client -> 10.7.16.45   ttl-left=n/a
+    t=+27s  client -> 10.7.16.45   ttl-left=n/a
+    t=+30s  client -> 10.7.16.45   ttl-left=n/a
+    t=+33s  client -> 10.7.16.45   ttl-left=n/a
+    t=+36s  client -> 10.7.16.45   ttl-left=n/a
+    t=+39s  client -> 10.7.24.9   ttl-left=n/a
+  [PASS] client served the OLD (cached) answer after the change
+  [PASS] client switched to the NEW answer once the TTL expired (t=+39s, TTL 30 s, limit 45s)
+
+=== 5. Manual flush: change back to 10.7.16.45 and flush the client cache ===
+    Mac 1 changes its own (primary) record now: ./mac1.sh dns-set 10.7.16.45
+      record now:
+        app.team1.test.		30	IN	A	10.7.16.45
+    right after the change, client still says: 10.7.24.9 (cached)
+  [PASS] without a flush the client still has the cached 10.7.24.9
+    flush: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+    right after the flush, client says: 10.7.16.45
+  [PASS] after the manual flush the new answer (10.7.16.45) appears IMMEDIATELY
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.16.45   (backup DNS; not time-critical)
+  >>> Press Enter when done... 
+=== Explanation ===
+    The TTL is a promise from the DNS server: "you may reuse this answer for 30 s". Resolvers and
+    clients cache it and do not ask again until it expires, so a record change reaches each client
+    up to one TTL later. Flushing the cache forces a fresh lookup at once, but only on that machine.
+    Production cutover (Route 53, region/LB migration): lower the TTL a day ahead (one OLD TTL),
+    change the record, keep the old target running for at least one TTL, then retire it. Short TTL
+    = faster cutover but more DNS queries; long TTL = fewer queries but slow, uneven migration.
+
+=== RESULT: 7 passed, 0 failed (mode=lan) ===

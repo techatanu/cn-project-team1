@@ -1,0 +1,26 @@
+
+##### 2026-11-23 15:19:42  ./mac1.sh diagnose
+Diagnosing https://app.team1.test  (mode=lan, expected edge IP 10.7.16.45, port 443)
+
+[1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  $ dig app.team1.test
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60127
+    app.team1.test.		30	IN	A	10.7.16.45
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+  [OK] app.team1.test -> 10.7.16.45 (the edge)
+
+[2/4 TCP] Can we complete the 3-way handshake to 10.7.16.45:443?
+  $ curl --connect-timeout 3 http://10.7.16.45:443/ (exit 7 = refused, 28 = timeout)
+  [OK] TCP handshake to 10.7.16.45:443 completed
+
+[3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:443:10.7.16.45 https://app.team1.test/api/status
+  certificate presented by the server:
+    subject=C=IN, O=Team1 CN Project, CN=app.team1.test
+    issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+    DNS:app.team1.test, DNS:api.team1.test
+  [OK] certificate trusted and valid for app.team1.test (no -k used)
+
+[4/4 HTTP] Does the application answer correctly through the edge?
+    HTTP 200 backend=A edge=primary
+  [OK] HTTP 200 - all four layers healthy

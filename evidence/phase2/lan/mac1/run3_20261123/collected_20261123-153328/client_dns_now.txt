@@ -1,0 +1,8 @@
+127.0.0.1
+10.7.24.9
+  nameserver[0] : 127.0.0.1
+  nameserver[1] : 10.7.24.9
+name: app.team1.test
+ip_address: 10.7.16.45
+
+	inet 10.7.23.243 netmask 0xffffe000 broadcast 10.7.31.255

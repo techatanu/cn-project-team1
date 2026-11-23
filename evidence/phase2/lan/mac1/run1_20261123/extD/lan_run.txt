@@ -1,0 +1,378 @@
+# extD test - mode=lan - 2026-11-23 02:37:04 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): traffic to https://app.team1.test (edge 10.7.16.45, backends on 10.7.24.9) ===
+
+=== 1. Baseline: round-robin over both backends ===
+    request 1: 200 backend=B edge=primary
+    request 2: 200 backend=B edge=primary
+    request 3: 200 backend=B edge=primary
+    request 4: 200 backend=B edge=primary
+    request 5: 200 backend=B edge=primary
+    request 6: 200 backend=B edge=primary
+
+=== 2. Continuous traffic (5 req/s), then stop Backend A ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh kill-a   (or Ctrl+C in the Backend A window)
+  >>> Press Enter when done...     >>> Backend A STOPPED after request 128
+
+  >>> ACTION: On Mac 3: ./mac3.sh revive-a
+  >>> Press Enter when done...     >>> Backend A RESTARTED after request 304
+    waiting 7 s (fail_timeout=5s: nginx retries A only after the 5 s penalty)
+    traffic log (333 requests):
+      1 02:37:06 200 backend=B edge=primary
+      2 02:37:06 200 backend=B edge=primary
+      3 02:37:06 200 backend=B edge=primary
+      4 02:37:07 200 backend=B edge=primary
+      5 02:37:07 200 backend=B edge=primary
+      6 02:37:08 200 backend=B edge=primary
+      7 02:37:08 200 backend=B edge=primary
+      8 02:37:08 200 backend=B edge=primary
+      9 02:37:09 200 backend=B edge=primary
+      10 02:37:09 200 backend=B edge=primary
+      11 02:37:10 200 backend=B edge=primary
+      12 02:37:10 200 backend=B edge=primary
+      13 02:37:10 200 backend=B edge=primary
+      14 02:37:11 200 backend=B edge=primary
+      15 02:37:11 200 backend=B edge=primary
+      16 02:37:12 200 backend=A edge=primary
+      17 02:37:12 200 backend=B edge=primary
+      18 02:37:13 200 backend=A edge=primary
+      19 02:37:13 200 backend=B edge=primary
+      20 02:37:13 200 backend=A edge=primary
+      21 02:37:14 200 backend=B edge=primary
+      22 02:37:14 200 backend=A edge=primary
+      23 02:37:15 200 backend=B edge=primary
+      24 02:37:15 200 backend=A edge=primary
+      25 02:37:16 200 backend=B edge=primary
+      26 02:37:16 200 backend=A edge=primary
+      27 02:37:16 200 backend=B edge=primary
+      28 02:37:17 200 backend=A edge=primary
+      29 02:37:17 200 backend=B edge=primary
+      30 02:37:17 200 backend=A edge=primary
+      31 02:37:18 200 backend=B edge=primary
+      32 02:37:18 200 backend=A edge=primary
+      33 02:37:19 200 backend=B edge=primary
+      34 02:37:19 200 backend=A edge=primary
+      35 02:37:20 200 backend=B edge=primary
+      36 02:37:20 200 backend=A edge=primary
+      37 02:37:21 200 backend=B edge=primary
+      38 02:37:21 200 backend=A edge=primary
+      39 02:37:22 200 backend=B edge=primary
+      40 02:37:22 200 backend=A edge=primary
+      41 02:37:23 200 backend=B edge=primary
+      42 02:37:23 200 backend=A edge=primary
+      43 02:37:24 200 backend=B edge=primary
+      44 02:37:24 200 backend=A edge=primary
+      45 02:37:25 200 backend=B edge=primary
+      46 02:37:25 200 backend=A edge=primary
+      47 02:37:26 200 backend=B edge=primary
+      48 02:37:26 200 backend=A edge=primary
+      49 02:37:26 200 backend=B edge=primary
+      50 02:37:27 200 backend=A edge=primary
+      51 02:37:27 200 backend=B edge=primary
+      52 02:37:28 200 backend=A edge=primary
+      53 02:37:28 200 backend=B edge=primary
+      54 02:37:29 200 backend=A edge=primary
+      55 02:37:29 200 backend=B edge=primary
+      56 02:37:30 200 backend=A edge=primary
+      57 02:37:30 200 backend=B edge=primary
+      58 02:37:30 200 backend=A edge=primary
+      59 02:37:31 200 backend=B edge=primary
+      60 02:37:31 200 backend=A edge=primary
+      61 02:37:32 200 backend=B edge=primary
+      62 02:37:32 200 backend=A edge=primary
+      63 02:37:33 200 backend=B edge=primary
+      64 02:37:33 200 backend=A edge=primary
+      65 02:37:34 200 backend=B edge=primary
+      66 02:37:34 200 backend=A edge=primary
+      67 02:37:35 200 backend=B edge=primary
+      68 02:37:35 200 backend=A edge=primary
+      69 02:37:36 200 backend=B edge=primary
+      70 02:37:36 200 backend=A edge=primary
+      71 02:37:37 200 backend=B edge=primary
+      72 02:37:37 200 backend=A edge=primary
+      73 02:37:38 200 backend=B edge=primary
+      74 02:37:38 200 backend=A edge=primary
+      75 02:37:39 200 backend=B edge=primary
+      76 02:37:39 200 backend=A edge=primary
+      77 02:37:39 200 backend=B edge=primary
+      78 02:37:40 200 backend=A edge=primary
+      79 02:37:40 200 backend=B edge=primary
+      80 02:37:41 200 backend=A edge=primary
+      81 02:37:41 200 backend=B edge=primary
+      82 02:37:42 200 backend=A edge=primary
+      83 02:37:42 200 backend=B edge=primary
+      84 02:37:43 200 backend=A edge=primary
+      85 02:37:43 200 backend=B edge=primary
+      86 02:37:43 200 backend=A edge=primary
+      87 02:37:44 200 backend=B edge=primary
+      88 02:37:44 200 backend=A edge=primary
+      89 02:37:45 200 backend=B edge=primary
+      90 02:37:45 200 backend=A edge=primary
+      91 02:37:46 200 backend=B edge=primary
+      92 02:37:46 200 backend=A edge=primary
+      93 02:37:47 200 backend=B edge=primary
+      94 02:37:47 200 backend=A edge=primary
+      95 02:37:48 200 backend=B edge=primary
+      96 02:37:48 200 backend=B edge=primary
+      97 02:37:50 200 backend=B edge=primary
+      98 02:37:50 200 backend=B edge=primary
+      99 02:37:51 200 backend=B edge=primary
+      100 02:37:51 200 backend=B edge=primary
+      101 02:37:52 200 backend=B edge=primary
+      102 02:37:52 200 backend=B edge=primary
+      103 02:37:52 200 backend=B edge=primary
+      104 02:37:53 200 backend=B edge=primary
+      105 02:37:54 200 backend=B edge=primary
+      106 02:37:54 200 backend=B edge=primary
+      107 02:37:54 200 backend=B edge=primary
+      108 02:37:55 200 backend=B edge=primary
+      109 02:37:55 200 backend=B edge=primary
+      110 02:37:55 200 backend=B edge=primary
+      111 02:37:57 200 backend=B edge=primary
+      112 02:37:58 200 backend=B edge=primary
+      113 02:37:58 200 backend=B edge=primary
+      114 02:37:58 200 backend=B edge=primary
+      115 02:37:59 200 backend=B edge=primary
+      116 02:37:59 200 backend=B edge=primary
+      117 02:37:59 200 backend=B edge=primary
+      118 02:38:00 200 backend=B edge=primary
+      119 02:38:00 200 backend=B edge=primary
+      120 02:38:01 200 backend=B edge=primary
+      121 02:38:01 200 backend=B edge=primary
+      122 02:38:01 200 backend=B edge=primary
+      123 02:38:02 200 backend=B edge=primary
+      124 02:38:02 200 backend=B edge=primary
+      125 02:38:03 200 backend=B edge=primary
+      126 02:38:03 200 backend=B edge=primary
+      127 02:38:03 200 backend=B edge=primary
+      128 02:38:05 200 backend=B edge=primary
+      129 02:38:05 200 backend=B edge=primary
+      130 02:38:06 200 backend=B edge=primary
+      131 02:38:06 200 backend=B edge=primary
+      132 02:38:06 200 backend=B edge=primary
+      133 02:38:07 200 backend=B edge=primary
+      134 02:38:07 200 backend=B edge=primary
+      135 02:38:08 200 backend=B edge=primary
+      136 02:38:08 200 backend=B edge=primary
+      137 02:38:08 200 backend=B edge=primary
+      138 02:38:09 200 backend=B edge=primary
+      139 02:38:10 200 backend=B edge=primary
+      140 02:38:11 200 backend=B edge=primary
+      141 02:38:12 200 backend=B edge=primary
+      142 02:38:13 200 backend=B edge=primary
+      143 02:38:13 200 backend=B edge=primary
+      144 02:38:13 200 backend=B edge=primary
+      145 02:38:14 200 backend=B edge=primary
+      146 02:38:14 200 backend=B edge=primary
+      147 02:38:15 200 backend=B edge=primary
+      148 02:38:15 200 backend=B edge=primary
+      149 02:38:16 200 backend=B edge=primary
+      150 02:38:16 200 backend=B edge=primary
+      151 02:38:16 200 backend=B edge=primary
+      152 02:38:17 200 backend=B edge=primary
+      153 02:38:17 200 backend=B edge=primary
+      154 02:38:18 200 backend=B edge=primary
+      155 02:38:18 200 backend=B edge=primary
+      156 02:38:19 200 backend=B edge=primary
+      157 02:38:20 200 backend=B edge=primary
+      158 02:38:21 200 backend=B edge=primary
+      159 02:38:21 200 backend=B edge=primary
+      160 02:38:22 200 backend=B edge=primary
+      161 02:38:22 200 backend=B edge=primary
+      162 02:38:23 200 backend=B edge=primary
+      163 02:38:23 200 backend=B edge=primary
+      164 02:38:23 200 backend=B edge=primary
+      165 02:38:24 200 backend=B edge=primary
+      166 02:38:24 200 backend=B edge=primary
+      167 02:38:25 200 backend=B edge=primary
+      168 02:38:25 200 backend=B edge=primary
+      169 02:38:25 200 backend=B edge=primary
+      170 02:38:26 200 backend=B edge=primary
+      171 02:38:26 200 backend=B edge=primary
+      172 02:38:26 200 backend=B edge=primary
+      173 02:38:28 200 backend=B edge=primary
+      174 02:38:28 200 backend=B edge=primary
+      175 02:38:29 200 backend=B edge=primary
+      176 02:38:29 200 backend=B edge=primary
+      177 02:38:29 200 backend=B edge=primary
+      178 02:38:30 200 backend=B edge=primary
+      179 02:38:30 200 backend=B edge=primary
+      180 02:38:31 200 backend=B edge=primary
+      181 02:38:31 200 backend=B edge=primary
+      182 02:38:32 200 backend=B edge=primary
+      183 02:38:32 200 backend=B edge=primary
+      184 02:38:33 200 backend=B edge=primary
+      185 02:38:33 200 backend=B edge=primary
+      186 02:38:33 200 backend=B edge=primary
+      187 02:38:34 200 backend=B edge=primary
+      188 02:38:34 200 backend=B edge=primary
+      189 02:38:35 200 backend=B edge=primary
+      190 02:38:36 200 backend=B edge=primary
+      191 02:38:36 200 backend=B edge=primary
+      192 02:38:37 200 backend=B edge=primary
+      193 02:38:37 200 backend=B edge=primary
+      194 02:38:38 200 backend=B edge=primary
+      195 02:38:38 200 backend=B edge=primary
+      196 02:38:38 200 backend=B edge=primary
+      197 02:38:39 200 backend=B edge=primary
+      198 02:38:39 200 backend=B edge=primary
+      199 02:38:40 200 backend=B edge=primary
+      200 02:38:40 200 backend=B edge=primary
+      201 02:38:41 200 backend=B edge=primary
+      202 02:38:41 200 backend=B edge=primary
+      203 02:38:42 200 backend=B edge=primary
+      204 02:38:43 200 backend=B edge=primary
+      205 02:38:44 200 backend=B edge=primary
+      206 02:38:44 200 backend=B edge=primary
+      207 02:38:44 200 backend=B edge=primary
+      208 02:38:45 200 backend=B edge=primary
+      209 02:38:45 200 backend=B edge=primary
+      210 02:38:46 200 backend=B edge=primary
+      211 02:38:46 200 backend=B edge=primary
+      212 02:38:46 200 backend=B edge=primary
+      213 02:38:47 200 backend=B edge=primary
+      214 02:38:47 200 backend=B edge=primary
+      215 02:38:48 200 backend=B edge=primary
+      216 02:38:48 200 backend=B edge=primary
+      217 02:38:48 200 backend=B edge=primary
+      218 02:38:49 200 backend=B edge=primary
+      219 02:38:49 200 backend=B edge=primary
+      220 02:38:51 200 backend=B edge=primary
+      221 02:38:51 200 backend=B edge=primary
+      222 02:38:51 200 backend=B edge=primary
+      223 02:38:52 200 backend=B edge=primary
+      224 02:38:52 200 backend=B edge=primary
+      225 02:38:53 200 backend=B edge=primary
+      226 02:38:53 200 backend=B edge=primary
+      227 02:38:54 200 backend=B edge=primary
+      228 02:38:54 200 backend=B edge=primary
+      229 02:38:54 200 backend=B edge=primary
+      230 02:38:55 200 backend=B edge=primary
+      231 02:38:55 200 backend=B edge=primary
+      232 02:38:56 200 backend=B edge=primary
+      233 02:38:56 200 backend=B edge=primary
+      234 02:38:56 200 backend=B edge=primary
+      235 02:38:58 200 backend=B edge=primary
+      236 02:38:58 200 backend=B edge=primary
+      237 02:38:59 200 backend=B edge=primary
+      238 02:38:59 200 backend=B edge=primary
+      239 02:38:59 200 backend=B edge=primary
+      240 02:39:00 200 backend=B edge=primary
+      241 02:39:00 200 backend=B edge=primary
+      242 02:39:01 200 backend=B edge=primary
+      243 02:39:01 200 backend=B edge=primary
+      244 02:39:02 200 backend=B edge=primary
+      245 02:39:02 200 backend=B edge=primary
+      246 02:39:02 200 backend=B edge=primary
+      247 02:39:03 200 backend=B edge=primary
+      248 02:39:03 200 backend=B edge=primary
+      249 02:39:04 200 backend=B edge=primary
+      250 02:39:05 200 backend=B edge=primary
+      251 02:39:06 200 backend=B edge=primary
+      252 02:39:06 200 backend=B edge=primary
+      253 02:39:06 200 backend=B edge=primary
+      254 02:39:07 200 backend=B edge=primary
+      255 02:39:07 200 backend=B edge=primary
+      256 02:39:08 200 backend=B edge=primary
+      257 02:39:08 200 backend=B edge=primary
+      258 02:39:09 200 backend=B edge=primary
+      259 02:39:09 200 backend=B edge=primary
+      260 02:39:10 200 backend=B edge=primary
+      261 02:39:10 200 backend=B edge=primary
+      262 02:39:10 200 backend=B edge=primary
+      263 02:39:11 200 backend=B edge=primary
+      264 02:39:11 200 backend=B edge=primary
+      265 02:39:13 200 backend=B edge=primary
+      266 02:39:13 200 backend=B edge=primary
+      267 02:39:14 200 backend=B edge=primary
+      268 02:39:14 200 backend=B edge=primary
+      269 02:39:14 200 backend=B edge=primary
+      270 02:39:15 200 backend=B edge=primary
+      271 02:39:15 200 backend=B edge=primary
+      272 02:39:16 200 backend=B edge=primary
+      273 02:39:16 200 backend=B edge=primary
+      274 02:39:17 200 backend=B edge=primary
+      275 02:39:17 200 backend=B edge=primary
+      276 02:39:17 200 backend=B edge=primary
+      277 02:39:18 200 backend=B edge=primary
+      278 02:39:18 200 backend=A edge=primary
+      279 02:39:19 200 backend=B edge=primary
+      280 02:39:19 200 backend=A edge=primary
+      281 02:39:20 200 backend=B edge=primary
+      282 02:39:21 200 backend=A edge=primary
+      283 02:39:21 200 backend=B edge=primary
+      284 02:39:21 200 backend=A edge=primary
+      285 02:39:22 200 backend=B edge=primary
+      286 02:39:22 200 backend=A edge=primary
+      287 02:39:23 200 backend=B edge=primary
+      288 02:39:23 200 backend=A edge=primary
+      289 02:39:24 200 backend=B edge=primary
+      290 02:39:24 200 backend=A edge=primary
+      291 02:39:24 200 backend=B edge=primary
+      292 02:39:25 200 backend=A edge=primary
+      293 02:39:25 200 backend=B edge=primary
+      294 02:39:26 200 backend=A edge=primary
+      295 02:39:26 200 backend=B edge=primary
+      296 02:39:27 200 backend=A edge=primary
+      297 02:39:27 200 backend=B edge=primary
+      298 02:39:28 200 backend=A edge=primary
+      299 02:39:28 200 backend=B edge=primary
+      300 02:39:28 200 backend=A edge=primary
+      301 02:39:29 200 backend=B edge=primary
+      302 02:39:29 200 backend=A edge=primary
+      303 02:39:30 200 backend=B edge=primary
+      304 02:39:30 200 backend=A edge=primary
+      305 02:39:31 200 backend=B edge=primary
+      306 02:39:31 200 backend=A edge=primary
+      307 02:39:32 200 backend=B edge=primary
+      308 02:39:32 200 backend=A edge=primary
+      309 02:39:33 200 backend=B edge=primary
+      310 02:39:33 200 backend=A edge=primary
+      311 02:39:34 200 backend=B edge=primary
+      312 02:39:34 200 backend=A edge=primary
+      313 02:39:34 200 backend=B edge=primary
+      314 02:39:36 200 backend=A edge=primary
+      315 02:39:36 200 backend=B edge=primary
+      316 02:39:37 200 backend=A edge=primary
+      317 02:39:37 200 backend=B edge=primary
+      318 02:39:38 200 backend=A edge=primary
+      319 02:39:38 200 backend=B edge=primary
+      320 02:39:38 200 backend=A edge=primary
+      321 02:39:39 200 backend=B edge=primary
+      322 02:39:39 200 backend=A edge=primary
+      323 02:39:40 200 backend=B edge=primary
+      324 02:39:40 200 backend=A edge=primary
+      325 02:39:41 200 backend=B edge=primary
+      326 02:39:41 200 backend=A edge=primary
+      327 02:39:41 200 backend=B edge=primary
+      328 02:39:42 200 backend=A edge=primary
+      329 02:39:42 200 backend=B edge=primary
+      330 02:39:43 200 backend=A edge=primary
+      331 02:39:43 200 backend=B edge=primary
+      332 02:39:44 200 backend=A edge=primary
+      333 02:39:44 200 backend=B edge=primary
+
+=== Results ===
+    total requests: 333   failed (non-200): 0
+    while A was down: 176 requests, 162 served by B
+  [PASS] 0 failed requests during the whole test
+  [FAIL] while A was down, 100% of requests were served by Backend B
+  [PASS] after A came back, round-robin uses A again
+  [PASS] after A came back, B still serves too
+    On Mac 2: grep ', 10.7.24.9' /opt/homebrew/var/log/nginx/team1_access.log   (retried requests)
+
+=== Single point of failure (Ext D question) ===
+    Backends are now redundant, but the EDGE (nginx on Mac 2) is still a single point of failure:
+    app.team1.test resolves only to 10.7.16.45; if Mac 2 or its nginx dies, every request fails
+    even though both backends are healthy. Mac 3 is a second SPOF in our 3-laptop design: it hosts
+    BOTH backends (and the backup DNS and the standby edge), so losing the laptop loses everything.
+    To remove the edge SPOF in production:
+      * Two edge nodes + VRRP (keepalived): both share one virtual IP; the backup takes the VIP
+        within ~1-3 s when the master stops sending VRRP adverts. DNS never changes.
+      * DNS round-robin / health-checked DNS (Route 53 failover records): publish both edge IPs
+        with a short TTL; clients retry the other IP. Slower (bounded by TTL + client caches).
+      * Managed cloud LB (AWS ALB, GCP LB): the provider runs the redundant edge fleet for you.
+    Ext E shows the manual, DNS-based version of this: moving traffic to a standby edge.
+
+=== RESULT: 3 passed, 1 failed (mode=lan) ===

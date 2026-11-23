@@ -1,0 +1,76 @@
+##### 2026-11-23 02:42:49  ./mac1.sh diagnose
+Diagnosing https://app.team1.test  (mode=lan, expected edge IP 10.7.16.45, port 443)
+
+[1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  $ dig app.team1.test
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 2149
+    app.team1.test.		30	IN	A	10.7.16.45
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+  [OK] app.team1.test -> 10.7.16.45 (the edge)
+
+[2/4 TCP] Can we complete the 3-way handshake to 10.7.16.45:443?
+  $ curl --connect-timeout 3 http://10.7.16.45:443/ (exit 7 = refused, 28 = timeout)
+  [OK] TCP handshake to 10.7.16.45:443 completed
+
+[3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:443:10.7.16.45 https://app.team1.test/api/status
+  certificate presented by the server:
+    subject=C=IN, O=Team1 CN Project, CN=app.team1.test
+    issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+    DNS:app.team1.test, DNS:api.team1.test
+  [OK] certificate trusted and valid for app.team1.test (no -k used)
+
+[4/4 HTTP] Does the application answer correctly through the edge?
+    HTTP 200 backend=A edge=primary
+  [OK] HTTP 200 - all four layers healthy
+
+##### 2026-11-23 02:43:38  ./mac1.sh diagnose
+Diagnosing https://app.team1.test  (mode=lan, expected edge IP 10.7.16.45, port 443)
+
+[1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  $ dig app.team1.test
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 32429
+    app.team1.test.		30	IN	A	10.7.16.45
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+  [OK] app.team1.test -> 10.7.16.45 (the edge)
+
+[2/4 TCP] Can we complete the 3-way handshake to 10.7.16.45:443?
+  $ curl --connect-timeout 3 http://10.7.16.45:443/ (exit 7 = refused, 28 = timeout)
+  [OK] TCP handshake to 10.7.16.45:443 completed
+
+[3/4 TLS] Does the certificate validate for app.team1.test (trusted CA + matching name)?
+  $ curl -sS -o /dev/null -w %{http_code} --resolve app.team1.test:443:10.7.16.45 https://app.team1.test/api/status
+  certificate presented by the server:
+    subject=C=IN, O=Team1 CN Project, CN=wrong.team1.test
+    issuer=C=IN, O=Team1 CN Project, CN=Team1 Local CA
+    DNS:wrong.team1.test
+
+  >>> VERDICT: fault at the TLS layer (layer 3): certificate rejected by the client: curl: (60) SSL: no alternative certificate subject name matches target host name 'app.team1.test'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+      - name mismatch -> the SAN above must contain DNS:app.team1.test (nginx ssl_certificate points at the wrong file?)
+      - untrusted issuer -> install team1-ca.crt: sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain team1-ca.crt
+      - on the edge: grep ssl_certificate /opt/homebrew/etc/nginx/servers/*.conf ; nginx -t ; nginx -s reload
+
+##### 2026-11-23 02:44:43  ./mac1.sh fault-dns
+INJECTED: DNS now answers app.team1.test -> 10.7.31.250 (edge is 10.7.16.45).
+
+##### 2026-11-23 02:45:06  ./mac1.sh diagnose
+Diagnosing https://app.team1.test  (mode=lan, expected edge IP 10.7.16.45, port 443)
+
+[1/4 DNS] Does app.team1.test resolve, and to the EDGE's IP?
+  $ dig app.team1.test
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 13421
+    app.team1.test.		30	IN	A	10.7.31.250
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+
+  >>> VERDICT: fault at the DNS layer (layer 1): resolves to 10.7.31.250 but the edge is 10.7.16.45 (wrong record)
+      - compare servers: dig +short @10.7.23.243 -p 53 app.team1.test ; dig +short @10.7.24.9 -p 53 app.team1.test
+      - fix the record on the DNS Mac: cat /opt/homebrew/etc/team1.hosts ; ./set_record.sh 10.7.16.45 (sends SIGHUP)
+      - then flush the client: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+
+##### 2026-11-23 02:45:21  ./mac1.sh fault-restore
+RESTORED (was: dns-wrong-ip).

@@ -1,0 +1,10 @@
+Mac 1 self-test  (2026-11-23 15:33:28, DNS port 53)
+IP addresses: 10.7.23.243   (expected 10.7.23.243)
+  [PASS] Primary DNS answers app.team1.test
+  [PASS] TTL is 30 s (Ext B)
+        record: app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] Backup DNS on Mac 3 (10.7.24.9) answers the same
+  [PASS] This Mac lists BOTH DNS servers (127.0.0.1 then 10.7.24.9)
+  [PASS] Team1 CA trusted in the System keychain
+  [PASS] https://app.team1.test works (200, no -k)
+Result: 6 passed, 0 failed

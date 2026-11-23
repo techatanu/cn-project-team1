@@ -1,0 +1,154 @@
+# extA test - mode=lan - 2026-11-23 02:21:52 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN). Run on a client Mac. Primary DNS 10.7.23.243, backup DNS 10.7.24.9 ===
+  $ scutil --dns
+    DNS configuration
+    
+    resolver #1
+      nameserver[0] : 127.0.0.1
+      nameserver[1] : 10.7.24.9
+      flags    : Request A records, Request AAAA records
+      reach    : 0x00030002 (Reachable,Local Address,Directly Reachable Address)
+    
+    resolver #2
+      domain   : local
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 300000
+    
+    resolver #3
+      domain   : 254.169.in-addr.arpa
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 300200
+    
+    resolver #4
+      domain   : 8.e.f.ip6.arpa
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 300400
+    
+    resolver #5
+      domain   : 9.e.f.ip6.arpa
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 300600
+    
+    resolver #6
+      domain   : a.e.f.ip6.arpa
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 300800
+    
+    resolver #7
+      domain   : b.e.f.ip6.arpa
+      options  : mdns
+      timeout  : 5
+      flags    : Request A records
+      reach    : 0x00000000 (Not Reachable)
+      order    : 301000
+    
+    DNS configuration (for scoped queries)
+    
+    resolver #1
+      nameserver[0] : 127.0.0.1
+      nameserver[1] : 10.7.24.9
+      if_index : 11 (en0)
+      flags    : Scoped, Request A records, Request AAAA records
+      reach    : 0x00020002 (Reachable,Directly Reachable Address)
+  [PASS] client lists BOTH 10.7.23.243 and 10.7.24.9 as DNS servers
+
+=== 1. Both DNS servers serve the same record ===
+  $ dig +noall +answer @10.7.23.243 app.team1.test
+    app.team1.test.		30	IN	A	10.7.16.45
+  $ dig +noall +answer @10.7.24.9 app.team1.test
+    app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] primary answers -> 10.7.16.45
+  [PASS] backup answers -> 10.7.16.45
+  [PASS] HTTPS works (200)
+
+  >>> ACTION: On Mac 1 (Prince, 2nd window): ./mac1.sh dns-stop
+  >>> Press Enter when done... 
+=== 2. Primary down -> client falls back to the backup ===
+  [PASS] primary 10.7.23.243 no longer answers
+    flushing this Mac's DNS cache (sudo password may be asked)
+  $ dig +time=2 +tries=1 app.team1.test
+    
+    ; <<>> DiG 9.10.6 <<>> +time=2 +tries=1 app.team1.test
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 17768
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+    
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 1232
+    ;; QUESTION SECTION:
+    ;app.team1.test.			IN	A
+    
+    ;; ANSWER SECTION:
+    app.team1.test.		30	IN	A	10.7.16.45
+    
+    ;; Query time: 93 msec
+    ;; SERVER: 10.7.24.9#53(10.7.24.9)
+    ;; WHEN: Mon Nov 23 02:23:13 IST 2026
+    ;; MSG SIZE  rcvd: 59
+    
+  $ dscacheutil -q host -a name app.team1.test
+    name: app.team1.test
+    ip_address: 10.7.16.45
+    
+  [PASS] system resolver still returns 10.7.16.45 (answered by backup 10.7.24.9)
+  $ /usr/bin/curl -s -i --max-time 8 https://app.team1.test/api/status
+    HTTP/2 200 
+    server: nginx/1.31.6
+    date: Sun, 22 Nov 2026 20:53:14 GMT
+    content-type: application/json
+    content-length: 76
+    x-backend: B
+    cache-control: no-store
+    x-edge: primary
+    
+    {"backend": "B", "status": "ok", "time": "2026-11-22T20:53:14.089160+00:00"}  [PASS] HTTPS still works with the primary DNS down
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh backends-stop
+  >>> Press Enter when done... 
+=== 3a. APPLICATION failure: name resolves, HTTP 502 ===
+  $ dig +short app.team1.test
+    10.7.16.45
+  $ /usr/bin/curl -s -o /dev/null -w HTTP %{http_code}\n https://app.team1.test/api/status
+    HTTP 504
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh backends-start   then   ./mac3.sh dns-stop
+  >>> Press Enter when done... 
+=== 3b. DNS failure: backends up, no DNS server answers ===
+  $ dig +time=2 +tries=1 app.team1.test
+    
+    ; <<>> DiG 9.10.6 <<>> +time=2 +tries=1 app.team1.test
+    ;; global options: +cmd
+    ;; connection timed out; no servers could be reached
+  $ /usr/bin/curl -s -o /dev/null -w HTTP %{http_code}\n --max-time 8 https://app.team1.test/api/status
+    HTTP 000
+    expect: 'curl: (6) Could not resolve host' - no TCP connection is ever attempted
+
+  >>> ACTION: Restore: Mac 1: ./mac1.sh dns-start   AND   Mac 3: ./mac3.sh dns-start
+  >>> Press Enter when done... 
+=== Explanation ===
+    DNS failure:  the client cannot turn app.team1.test into an IP, so it never opens a TCP
+                  connection. curl ends with "(6) Could not resolve host". Edge and backends may be
+                  perfectly healthy. A backup resolver in the client's list removes this single point
+                  of failure; the client retries the next server after a short timeout.
+    App failure:  DNS answers, TCP 3-way handshake + TLS handshake with the edge succeed, but the edge
+                  has no healthy backend, so nginx returns HTTP 502 Bad Gateway. The fix is on the
+                  server side (restart backends / HA), not in DNS.
+
+=== RESULT: 7 passed, 0 failed (mode=lan) ===

@@ -1,0 +1,43 @@
+# extB test - mode=lan - 2026-11-23 02:27:23 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): record app.team1.test -> 10.7.16.45; client cache = mDNSResponder on this Mac ===
+
+=== 1. Short, visible TTL ===
+  $ auth
+    app.team1.test.		30	IN	A	10.7.16.45
+  [PASS] authoritative answer carries TTL 30 (local-ttl=30)
+
+=== 2. Client resolves and caches app.team1.test ===
+    client: app.team1.test -> 10.7.16.45  (TTL left: n/a)
+  [PASS] client has the current record 10.7.16.45
+
+=== 3. Change the record to a different IP (10.7.24.9) ===
+
+  >>> ACTION: Mac 1 (Prince): ./mac1.sh dns-set 10.7.24.9    AND    Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.24.9
+  >>> Press Enter when done...   $ auth
+    app.team1.test.		30	IN	A	10.7.24.9
+  [PASS] DNS server now answers 10.7.24.9
+
+=== 4. Client keeps the cached OLD answer until the TTL expires ===
+    t=+0s  client -> 10.7.24.9   ttl-left=n/a
+  [FAIL] client served the OLD (cached) answer after the change
+  [PASS] client switched to the NEW answer once the TTL expired (t=+0s, TTL 30 s)
+
+=== 5. Manual flush: change back to 10.7.16.45 and flush the client cache ===
+
+  >>> ACTION: Mac 1 (Prince): ./mac1.sh dns-set 10.7.16.45    AND    Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.16.45
+  >>> Press Enter when done...     right after the change, client still says: 10.7.16.45 (cached)
+  [FAIL] without a flush the client still has the cached 10.7.24.9
+    flush: sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+    right after the flush, client says: 10.7.16.45
+  [PASS] after the manual flush the new answer (10.7.16.45) appears IMMEDIATELY
+
+=== Explanation ===
+    The TTL is a promise from the DNS server: "you may reuse this answer for 30 s". Resolvers and
+    clients cache it and do not ask again until it expires, so a record change reaches each client
+    up to one TTL later. Flushing the cache forces a fresh lookup at once, but only on that machine.
+    Production cutover (Route 53, region/LB migration): lower the TTL a day ahead (one OLD TTL),
+    change the record, keep the old target running for at least one TTL, then retire it. Short TTL
+    = faster cutover but more DNS queries; long TTL = fewer queries but slow, uneven migration.
+
+=== RESULT: 5 passed, 2 failed (mode=lan) ===

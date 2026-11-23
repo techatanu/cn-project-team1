@@ -1,0 +1,71 @@
+# extE test - mode=lan - 2026-11-23 14:48:44 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): primary edge 10.7.16.45 (Mac 2) -> standby edge 10.7.24.9 (Mac 3) ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh start  and  ./mac3.sh standby-on
+  >>> Press Enter when done... 
+=== 1. Both edges are up and identical except X-Edge ===
+    primary edge 10.7.16.45: 200 backend=B edge=primary
+    standby edge 10.7.24.9: 200 backend=B edge=standby
+  [PASS] primary edge serves (X-Edge: primary)
+  [PASS] standby edge serves (X-Edge: standby)
+    the backup DNS is changed first (the client asks the primary, so this does not touch its cache)
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.24.9   (backup DNS; not time-critical)
+  >>> Press Enter when done... 
+=== 2. Client resolves and caches the CURRENT record ===
+    client cache: app.team1.test -> 10.7.16.45 (TTL left: ?)
+  [PASS] client is on the primary edge (10.7.16.45)
+    client request: 200 backend=A edge=primary
+
+=== 3. CUTOVER: change the A record to the standby edge (10.7.24.9) ===
+    Mac 1 changes its own (primary) record now: ./mac1.sh dns-set 10.7.24.9
+      record now:
+        app.team1.test.		30	IN	A	10.7.24.9
+    authoritative DNS now answers: app.team1.test -> 10.7.24.9
+  [PASS] a NEW lookup (empty cache) gets the standby edge at once
+    cached client still has: 10.7.16.45 (TTL left: ?)
+  [PASS] the CACHED client still gets the OLD answer (TTL not expired)
+  [PASS] ...so it still hits the OLD edge: primary
+
+=== 4. Watching the cached client until its TTL runs out (TTL=30 s) ===
+    t=+0s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+4s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+7s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+10s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+14s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+17s  client -> 10.7.16.45  ttl-left=?  200 backend=A edge=primary
+    t=+20s  client -> 10.7.16.45  ttl-left=?  200 backend=B edge=primary
+    t=+25s  client -> 10.7.16.45  ttl-left=?  200 backend=B edge=primary
+    t=+28s  client -> 10.7.16.45  ttl-left=?  200 backend=B edge=primary
+    t=+31s  client -> 10.7.16.45  ttl-left=?  200 backend=B edge=primary
+    t=+35s  client -> 10.7.16.45  ttl-left=?  200 backend=B edge=primary
+    t=+38s  client -> 10.7.24.9  ttl-left=?  200 backend=B edge=standby
+  [PASS] client moved to the standby edge after its cache expired (t=+38s, TTL 30 s)
+  [PASS] client is now served by X-Edge: standby
+
+=== 5. Old edge can now be drained / stopped without user impact ===
+
+  >>> ACTION: On Mac 2 (Atanu): nginx -s stop   (check: pgrep nginx prints nothing)
+  >>> Press Enter when done...   [PASS] the primary edge 10.7.16.45 is really down
+  [PASS] with the primary edge stopped, the client still gets 200 (via standby 10.7.24.9)
+
+=== 6. Roll back the record to the primary edge ===
+
+  >>> ACTION: On Mac 2 (Atanu): nginx
+  >>> Press Enter when done...     Mac 1 changes its own (primary) record now: ./mac1.sh dns-set 10.7.16.45
+      record now:
+        app.team1.test.		30	IN	A	10.7.16.45
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.16.45   (backup DNS; not time-critical)
+  >>> Press Enter when done...     record -> 10.7.16.45
+
+=== Explanation ===
+    DNS-based cutover moves NEW lookups instantly, but every resolver/client that already cached the
+    old answer keeps using the old edge until its TTL expires. So: lower the TTL well before a
+    migration (we use 30 s), keep the old edge running for at least one TTL (plus slack for clients
+    that ignore TTL), then drain it. This is how production traffic is shifted between regions/load
+    balancers with Route 53 weighted/failover records. It is NOT instant failover: for that you need
+    a shared virtual IP (VRRP/keepalived) or an anycast/managed load balancer (see Ext D).
+
+=== RESULT: 10 passed, 0 failed (mode=lan) ===

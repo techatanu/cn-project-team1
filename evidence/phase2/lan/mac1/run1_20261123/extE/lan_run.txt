@@ -1,0 +1,49 @@
+# extE test - mode=lan - 2026-11-23 02:30:46 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): primary edge 10.7.16.45 (Mac 2) -> standby edge 10.7.24.9 (Mac 3) ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh start  and  ./mac3.sh standby-on
+  >>> Press Enter when done... 
+=== 1. Both edges are up and identical except X-Edge ===
+    primary edge 10.7.16.45: 200 backend=A edge=primary
+    standby edge 10.7.24.9: 000 backend=- edge=-
+  [PASS] primary edge serves (X-Edge: primary)
+  [FAIL] standby edge serves (X-Edge: standby)
+
+=== 2. Client resolves and caches the CURRENT record ===
+    client cache: app.team1.test -> 10.7.16.45 (TTL left: ?)
+  [PASS] client is on the primary edge (10.7.16.45)
+    client request: 200 backend=A edge=primary
+
+=== 3. CUTOVER: change the A record to the standby edge (10.7.24.9) ===
+
+  >>> ACTION: Mac 1 (Prince): ./mac1.sh dns-set 10.7.24.9    AND    Mac 3 (Sambhav): ./mac3.sh dns-set 10.7.24.9
+  >>> Press Enter when done...     authoritative DNS now answers: app.team1.test -> 10.7.24.9
+  [PASS] a NEW lookup (empty cache) gets the standby edge at once
+    cached client still has: 10.7.24.9 (TTL left: ?)
+  [FAIL] the CACHED client still gets the OLD answer (TTL not expired)
+  [FAIL] ...so it still hits the OLD edge: 
+
+=== 4. Watching the cached client until its TTL runs out (TTL=30 s) ===
+    t=+3s  client -> 10.7.24.9  ttl-left=?  000 backend=- edge=-
+  [PASS] client moved to the standby edge after its cache expired (t=+4s, TTL 30 s)
+  [FAIL] client is now served by X-Edge: standby
+
+=== 5. Old edge can now be drained / stopped without user impact ===
+
+  >>> ACTION: On Mac 2 (Atanu): nginx -s stop
+  >>> Press Enter when done...   [FAIL] with the primary edge stopped, the client still gets 200 (via standby 10.7.24.9)
+
+=== 6. Roll back the record to the primary edge ===
+
+  >>> ACTION: Mac 2: nginx   ;  then Mac 1: ./mac1.sh dns-set 10.7.16.45  AND  Mac 3: ./mac3.sh dns-set 10.7.16.45
+  >>> Press Enter when done... 
+=== Explanation ===
+    DNS-based cutover moves NEW lookups instantly, but every resolver/client that already cached the
+    old answer keeps using the old edge until its TTL expires. So: lower the TTL well before a
+    migration (we use 30 s), keep the old edge running for at least one TTL (plus slack for clients
+    that ignore TTL), then drain it. This is how production traffic is shifted between regions/load
+    balancers with Route 53 weighted/failover records. It is NOT instant failover: for that you need
+    a shared virtual IP (VRRP/keepalived) or an anycast/managed load balancer (see Ext D).
+
+=== RESULT: 4 passed, 5 failed (mode=lan) ===

@@ -1,0 +1,405 @@
+Nov 23 00:52:58 dnsmasq[58831]: started, version 2.93 cachesize 150
+Nov 23 00:52:58 dnsmasq[58831]: compile time options: IPv6 GNU-getopt no-DBus no-UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack no-ipset no-nftset auth no-DNSSEC loop-detect no-inotify dumpfile
+Nov 23 00:52:58 dnsmasq[58831]: setting --bind-interfaces option because of OS limitations
+Nov 23 00:52:58 dnsmasq[58831]: using nameserver 8.8.8.8#53
+Nov 23 00:52:58 dnsmasq[58831]: using nameserver 1.1.1.1#53
+Nov 23 00:52:58 dnsmasq[58831]: using only locally-known addresses for team1.test
+Nov 23 00:52:58 dnsmasq[58831]: read /etc/hosts - 3 names
+Nov 23 01:08:32 dnsmasq[58831]: config 10.7.16.45 is app.team1.test
+Nov 23 01:09:49 dnsmasq[58831]: query[A] app.team1.test from 10.7.16.45
+Nov 23 01:09:49 dnsmasq[58831]: config app.team1.test is 10.7.16.45
+Nov 23 01:13:55 dnsmasq[58831]: exiting on receipt of SIGTERM
+Nov 23 01:13:55 dnsmasq[59258]: started, version 2.93 cachesize 150
+Nov 23 01:13:55 dnsmasq[59258]: compile time options: IPv6 GNU-getopt no-DBus no-UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack no-ipset no-nftset auth no-DNSSEC loop-detect no-inotify dumpfile
+Nov 23 01:13:55 dnsmasq[59258]: setting --bind-interfaces option because of OS limitations
+Nov 23 01:13:55 dnsmasq[59258]: using nameserver 8.8.8.8#53
+Nov 23 01:13:55 dnsmasq[59258]: using nameserver 1.1.1.1#53
+Nov 23 01:13:55 dnsmasq[59258]: using only locally-known addresses for team1.test
+Nov 23 01:13:55 dnsmasq[59258]: read /etc/hosts - 3 names
+Nov 23 01:13:55 dnsmasq[59258]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 01:13:56 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:13:56 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:13:56 dnsmasq[59258]: query[A] api.team1.test from 127.0.0.1
+Nov 23 01:13:56 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts api.team1.test is 10.7.16.45
+Nov 23 01:15:15 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:15:15 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:15:15 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:15:15 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:15:15 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:15:15 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:15:16 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:15:16 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:15:16 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:15:16 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:15:16 dnsmasq[59258]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 01:15:16 dnsmasq[59258]: config app.team1.test is NODATA-IPv6
+Nov 23 01:24:07 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:24:07 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:24:07 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:24:07 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:24:07 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:24:07 dnsmasq[59258]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 01:24:07 dnsmasq[59258]: config app.team1.test is NODATA-IPv6
+Nov 23 01:40:33 dnsmasq[59258]: query[A] app.team1.test from 10.7.23.243
+Nov 23 01:40:33 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:40:34 dnsmasq[59258]: query[A] app.team1.test from 10.7.23.243
+Nov 23 01:40:34 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:40:35 dnsmasq[59258]: query[A] app.team1.test from 127.0.0.1
+Nov 23 01:40:35 dnsmasq[59258]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 01:40:35 dnsmasq[59258]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 01:40:35 dnsmasq[59258]: config app.team1.test is NODATA-IPv6
+Nov 23 01:42:23 dnsmasq[59258]: exiting on receipt of SIGTERM
+Nov 23 02:14:27 dnsmasq[61180]: started, version 2.93 cachesize 150
+Nov 23 02:14:27 dnsmasq[61180]: compile time options: IPv6 GNU-getopt no-DBus no-UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack no-ipset no-nftset auth no-DNSSEC loop-detect no-inotify dumpfile
+Nov 23 02:14:27 dnsmasq[61180]: setting --bind-interfaces option because of OS limitations
+Nov 23 02:14:27 dnsmasq[61180]: using nameserver 8.8.8.8#53
+Nov 23 02:14:27 dnsmasq[61180]: using nameserver 1.1.1.1#53
+Nov 23 02:14:27 dnsmasq[61180]: using only locally-known addresses for team1.test
+Nov 23 02:14:27 dnsmasq[61180]: read /etc/hosts - 3 names
+Nov 23 02:14:27 dnsmasq[61180]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:14:28 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:14:28 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:14:28 dnsmasq[61180]: query[A] api.team1.test from 127.0.0.1
+Nov 23 02:14:28 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts api.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:15:21 dnsmasq[61180]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:15:21 dnsmasq[61180]: config app.team1.test is NODATA-IPv6
+Nov 23 02:18:13 dnsmasq[61180]: exiting on receipt of SIGTERM
+Nov 23 02:18:14 dnsmasq[61448]: started, version 2.93 cachesize 150
+Nov 23 02:18:14 dnsmasq[61448]: compile time options: IPv6 GNU-getopt no-DBus no-UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack no-ipset no-nftset auth no-DNSSEC loop-detect no-inotify dumpfile
+Nov 23 02:18:14 dnsmasq[61448]: setting --bind-interfaces option because of OS limitations
+Nov 23 02:18:14 dnsmasq[61448]: using nameserver 8.8.8.8#53
+Nov 23 02:18:14 dnsmasq[61448]: using nameserver 1.1.1.1#53
+Nov 23 02:18:14 dnsmasq[61448]: using only locally-known addresses for team1.test
+Nov 23 02:18:14 dnsmasq[61448]: read /etc/hosts - 3 names
+Nov 23 02:18:14 dnsmasq[61448]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:18:15 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:15 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:15 dnsmasq[61448]: query[A] api.team1.test from 127.0.0.1
+Nov 23 02:18:15 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts api.team1.test is 10.7.16.45
+Nov 23 02:18:30 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:30 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:30 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:30 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:30 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:30 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:31 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:31 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:31 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:18:31 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:18:31 dnsmasq[61448]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:18:31 dnsmasq[61448]: config app.team1.test is NODATA-IPv6
+Nov 23 02:20:39 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:20:39 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:20:39 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:20:39 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:20:39 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:20:39 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:20:40 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:20:40 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:20:40 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:20:40 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:20:40 dnsmasq[61448]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:20:40 dnsmasq[61448]: config app.team1.test is NODATA-IPv6
+Nov 23 02:21:52 dnsmasq[61448]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:21:52 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:21:52 dnsmasq[61448]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:21:52 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:21:52 dnsmasq[61448]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:21:52 dnsmasq[61448]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:23:05 dnsmasq[61448]: exiting on receipt of SIGTERM
+Nov 23 02:26:17 dnsmasq[61922]: started, version 2.93 cachesize 150
+Nov 23 02:26:17 dnsmasq[61922]: compile time options: IPv6 GNU-getopt no-DBus no-UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack no-ipset no-nftset auth no-DNSSEC loop-detect no-inotify dumpfile
+Nov 23 02:26:17 dnsmasq[61922]: setting --bind-interfaces option because of OS limitations
+Nov 23 02:26:17 dnsmasq[61922]: using nameserver 8.8.8.8#53
+Nov 23 02:26:17 dnsmasq[61922]: using nameserver 1.1.1.1#53
+Nov 23 02:26:17 dnsmasq[61922]: using only locally-known addresses for team1.test
+Nov 23 02:26:17 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:26:17 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:26:18 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:26:18 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:26:18 dnsmasq[61922]: query[A] api.team1.test from 127.0.0.1
+Nov 23 02:26:18 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts api.team1.test is 10.7.16.45
+Nov 23 02:27:24 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:27:24 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:27:24 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:27:24 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:27:24 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:27:24 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:27:24 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:27:24 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:27:39 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:27:39 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:27:40 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:27:40 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:28:04 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:28:04 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:28:04 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:28:04 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:28:04 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:28:04 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:28:19 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:28:19 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:28:20 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:28:20 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:28:44 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:28:44 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:28:44 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:28:44 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:28:45 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:28:45 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:28:45 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:28:45 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:32:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:32:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:32:09 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:32:09 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:32:37 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:32:37 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:32:38 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:32:38 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:33:42 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 02:33:42 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:33:42 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:33:42 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:33:42 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:33:42 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 02:34:43 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:34:43 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:34:44 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:34:44 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:37:04 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:37:04 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:37:04 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:37:04 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:37:42 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:37:42 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:38:20 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:38:20 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:38:20 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:38:20 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:38:58 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:38:58 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:39:36 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:39:36 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:40:48 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:40:48 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:41:27 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:41:27 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:41:27 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 02:41:27 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 02:42:50 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:42:50 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:42:51 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:42:51 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:43:38 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:43:38 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:44:49 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:44:49 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:45:06 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:45:06 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.31.250
+Nov 23 02:45:21 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 02:45:21 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 02:46:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:46:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:46:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:46:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:46:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:46:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:46:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:46:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 02:46:09 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 02:46:09 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 03:10:32 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 03:10:32 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 03:10:32 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 03:13:07 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 03:13:07 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 03:13:07 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 03:13:58 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 03:13:58 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 03:13:58 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 03:29:50 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 07:08:31 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 07:08:33 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 14:08:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 14:10:39 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 14:22:26 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:22:26 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:22:26 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:22:26 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:22:26 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:22:26 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:22:26 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:23:38 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:23:38 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:23:38 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:23:38 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:24:03 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:24:03 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:24:03 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:24:03 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:24:03 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:24:03 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:24:03 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:24:03 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:24:03 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:24:03 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:24:03 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:24:03 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:24:43 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:24:43 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:24:43 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:24:43 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:24:43 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:24:43 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:24:45 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:24:45 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:24:45 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:24:45 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:26:41 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:26:41 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:26:41 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:26:41 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:26:55 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:26:55 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:26:55 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:26:55 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:26:55 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:26:55 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:26:56 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:26:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:26:56 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:26:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:26:56 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:26:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:27:36 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:27:36 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:27:36 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:27:36 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:27:36 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:27:36 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:27:37 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:27:37 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:27:37 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:27:37 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:42:30 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:42:30 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:42:30 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:42:30 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:42:55 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:42:55 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:42:55 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:42:55 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:42:55 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:42:55 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:42:56 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:42:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:42:56 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:42:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:42:56 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:42:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:43:35 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:43:35 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:43:35 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:43:35 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:43:36 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:43:36 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:43:37 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:43:37 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:43:37 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:43:37 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:47:49 dnsmasq[61922]: query[HTTPS] app.team1.test from 10.7.16.45
+Nov 23 14:47:49 dnsmasq[61922]: config app.team1.test is NODATA
+Nov 23 14:47:49 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 14:47:49 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:50:15 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:50:15 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:50:15 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 14:50:15 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 14:50:15 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:50:15 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:50:16 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:50:16 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:50:16 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:50:16 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:50:54 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:50:54 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.24.9
+Nov 23 14:51:31 dnsmasq[61922]: read /etc/hosts - 3 names
+Nov 23 14:51:31 dnsmasq[61922]: read /opt/homebrew/etc/team1.hosts - 2 names
+Nov 23 14:51:32 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 14:51:32 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 14:51:56 dnsmasq[61922]: query[A] app.team1.test from 10.7.23.243
+Nov 23 14:51:56 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:09:02 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:09:02 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:09:02 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:09:02 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 15:09:40 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:09:40 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:10:17 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:10:17 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:10:17 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:10:17 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 15:14:45 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 15:14:45 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:14:45 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts 10.7.16.45 is app.team1.test
+Nov 23 15:16:32 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:16:32 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:16:32 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:16:32 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 15:17:10 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:17:10 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:19:42 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:19:42 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:19:43 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:19:43 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:19:43 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:19:43 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 15:20:08 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:20:08 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:20:08 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:20:08 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:20:08 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:20:08 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:20:08 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:20:08 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:27:34 dnsmasq[61922]: query[A] app.team1.test from 10.7.16.45
+Nov 23 15:27:34 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:31:35 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:31:35 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:31:35 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:31:35 dnsmasq[61922]: config app.team1.test is NODATA-IPv6
+Nov 23 15:32:14 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:32:14 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:28 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:33:28 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:28 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:33:28 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:28 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:33:28 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:29 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:33:29 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:29 dnsmasq[61922]: query[A] app.team1.test from 127.0.0.1
+Nov 23 15:33:29 dnsmasq[61922]: /opt/homebrew/etc/team1.hosts app.team1.test is 10.7.16.45
+Nov 23 15:33:29 dnsmasq[61922]: query[AAAA] app.team1.test from 127.0.0.1
+Nov 23 15:33:29 dnsmasq[61922]: config app.team1.test is NODATA-IPv6

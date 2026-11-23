@@ -1,0 +1,38 @@
+# extC test - mode=lan - 2026-11-23 02:40:48 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): this client -> backends on 10.7.24.9; edge = 10.7.16.45 ===
+
+=== 1. BEFORE: client can bypass the edge ===
+    direct http://10.7.24.9:3001 -> HTTP 200 (curl exit 0)
+  [PASS] direct access to Backend A works (this is the problem)
+  [PASS] edge works (200)
+
+=== 2. Firewall ON (rollback copy saved first) ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh firewall-on
+  >>> Press Enter when done... 
+=== 3. Edge still reaches both backends, direct client access is blocked ===
+    via edge, request 1: 200 backend=B edge=primary
+    via edge, request 2: 200 backend=A edge=primary
+    via edge, request 3: 200 backend=B edge=primary
+    via edge, request 4: 200 backend=A edge=primary
+    via edge, request 5: 200 backend=B edge=primary
+    via edge, request 6: 200 backend=A edge=primary
+  [PASS] edge -> Backend A allowed (X-Backend: A seen)
+  [PASS] edge -> Backend B allowed (X-Backend: B seen)
+  $ /usr/bin/curl -sS -m 5 --connect-timeout 3 http://10.7.24.9:3001/api/status
+    curl: (28) Failed to connect to 10.7.24.9 port 3001 after 3002 ms: Timeout was reached
+  [PASS] direct http://10.7.24.9:3001 is BLOCKED (HTTP 000, curl exit 28 = 28 timeout)
+  $ /usr/bin/curl -sS -m 5 --connect-timeout 3 http://10.7.24.9:3002/api/status
+    curl: (28) Failed to connect to 10.7.24.9 port 3002 after 3007 ms: Timeout was reached
+  [PASS] direct http://10.7.24.9:3002 is BLOCKED (HTTP 000, curl exit 28 = 28 timeout)
+    timeout (exit 28) = packets silently DROPPED by a firewall.
+    'Connection refused' (exit 7) would mean the host answered with RST = nothing listening.
+    Also show on Mac 2 (Atanu): curl -m 3 http://10.7.24.9:3001/api/status  -> 200 (edge is allowed)
+
+=== 4. Rollback: firewall OFF, original configuration restored ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh firewall-off
+  >>> Press Enter when done...   [PASS] after rollback direct access works again (HTTP 200)
+
+=== RESULT: 7 passed, 0 failed (mode=lan) ===

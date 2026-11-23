@@ -1,0 +1,8 @@
+# extB test - mode=lan - 2026-11-23 14:26:40 IST - host=Princes-MacBook-Pro-3 (run 2, pasted by Prince; collected log supersedes after re-run)
+ 1. TTL 30 on the authoritative answer: PASS
+ 2. client has current record 10.7.16.45: PASS
+ 3. record changed on primary to 10.7.24.9 (done by the test itself): PASS
+ 4. client kept OLD cached 10.7.16.45 from t=+0s to t=+36s: PASS
+    client switched to 10.7.24.9 at t=+40s (polled every ~3.3s; between +36s and +40s): FAIL, limit was 35s
+ 5. changed back + manual flush -> new answer immediately: PASS (cached 10.7.24.9 before flush, 10.7.16.45 right after)
+ RESULT: 6 passed, 1 failed

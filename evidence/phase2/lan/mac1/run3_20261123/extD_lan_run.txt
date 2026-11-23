@@ -1,0 +1,151 @@
+# extD test - mode=lan - 2026-11-23 15:31:35 IST - host=Princes-MacBook-Pro-3
+
+=== Mode 2 (LAN): traffic to https://app.team1.test (edge 10.7.16.45, backends on 10.7.24.9) ===
+
+=== 1. Baseline: round-robin over both backends ===
+    request 1: 200 backend=B edge=primary
+    request 2: 200 backend=A edge=primary
+    request 3: 200 backend=B edge=primary
+    request 4: 200 backend=A edge=primary
+    request 5: 200 backend=B edge=primary
+    request 6: 200 backend=A edge=primary
+
+=== 2. Continuous traffic (5 req/s), then stop Backend A ===
+
+  >>> ACTION: On Mac 3 (Sambhav): ./mac3.sh kill-a   (or Ctrl+C in the Backend A window)
+  >>> Press Enter when done...     >>> Backend A STOPPED after request 24
+
+  >>> ACTION: On Mac 3: ./mac3.sh revive-a
+  >>> Press Enter when done...     >>> Backend A RESTARTED after request 77 (outage window counted: requests 25-64)
+    waiting 7 s (fail_timeout=5s: nginx retries A only after the 5 s penalty)
+    traffic log (106 requests):
+      1 15:31:36 200 backend=B edge=primary
+      2 15:31:37 200 backend=A edge=primary
+      3 15:31:37 200 backend=B edge=primary
+      4 15:31:38 200 backend=A edge=primary
+      5 15:31:38 200 backend=B edge=primary
+      6 15:31:39 200 backend=A edge=primary
+      7 15:31:40 200 backend=B edge=primary
+      8 15:31:40 200 backend=A edge=primary
+      9 15:31:41 200 backend=B edge=primary
+      10 15:31:41 200 backend=A edge=primary
+      11 15:31:42 200 backend=B edge=primary
+      12 15:31:43 200 backend=A edge=primary
+      13 15:31:43 200 backend=B edge=primary
+      14 15:31:44 200 backend=A edge=primary
+      15 15:31:44 200 backend=B edge=primary
+      16 15:31:45 200 backend=A edge=primary
+      17 15:31:45 200 backend=B edge=primary
+      18 15:31:46 200 backend=A edge=primary
+      19 15:31:46 200 backend=B edge=primary
+      20 15:31:47 200 backend=A edge=primary
+      21 15:31:47 200 backend=B edge=primary
+      22 15:31:48 200 backend=A edge=primary
+      23 15:31:48 200 backend=B edge=primary
+      24 15:31:49 200 backend=B edge=primary
+      25 15:31:50 200 backend=B edge=primary
+      26 15:31:51 200 backend=B edge=primary
+      27 15:31:51 200 backend=B edge=primary
+      28 15:31:52 200 backend=B edge=primary
+      29 15:31:52 200 backend=B edge=primary
+      30 15:31:53 200 backend=B edge=primary
+      31 15:31:54 200 backend=B edge=primary
+      32 15:31:54 200 backend=B edge=primary
+      33 15:31:55 200 backend=B edge=primary
+      34 15:31:56 200 backend=B edge=primary
+      35 15:31:56 200 backend=B edge=primary
+      36 15:31:57 200 backend=B edge=primary
+      37 15:31:58 200 backend=B edge=primary
+      38 15:31:59 200 backend=B edge=primary
+      39 15:31:59 200 backend=B edge=primary
+      40 15:32:00 200 backend=B edge=primary
+      41 15:32:00 200 backend=B edge=primary
+      42 15:32:01 200 backend=B edge=primary
+      43 15:32:01 200 backend=B edge=primary
+      44 15:32:02 200 backend=B edge=primary
+      45 15:32:03 200 backend=B edge=primary
+      46 15:32:03 200 backend=B edge=primary
+      47 15:32:04 200 backend=B edge=primary
+      48 15:32:04 200 backend=B edge=primary
+      49 15:32:05 200 backend=B edge=primary
+      50 15:32:06 200 backend=B edge=primary
+      51 15:32:06 200 backend=B edge=primary
+      52 15:32:07 200 backend=B edge=primary
+      53 15:32:07 200 backend=B edge=primary
+      54 15:32:08 200 backend=B edge=primary
+      55 15:32:08 200 backend=B edge=primary
+      56 15:32:09 200 backend=B edge=primary
+      57 15:32:09 200 backend=B edge=primary
+      58 15:32:10 200 backend=B edge=primary
+      59 15:32:10 200 backend=B edge=primary
+      60 15:32:11 200 backend=B edge=primary
+      61 15:32:11 200 backend=B edge=primary
+      62 15:32:12 200 backend=B edge=primary
+      63 15:32:12 200 backend=B edge=primary
+      64 15:32:14 200 backend=B edge=primary
+      65 15:32:15 200 backend=B edge=primary
+      66 15:32:15 200 backend=B edge=primary
+      67 15:32:16 200 backend=B edge=primary
+      68 15:32:16 200 backend=B edge=primary
+      69 15:32:17 200 backend=B edge=primary
+      70 15:32:17 200 backend=B edge=primary
+      71 15:32:18 200 backend=B edge=primary
+      72 15:32:18 200 backend=B edge=primary
+      73 15:32:19 200 backend=B edge=primary
+      74 15:32:19 200 backend=B edge=primary
+      75 15:32:20 200 backend=B edge=primary
+      76 15:32:20 200 backend=B edge=primary
+      77 15:32:20 200 backend=A edge=primary
+      78 15:32:21 200 backend=B edge=primary
+      79 15:32:21 200 backend=A edge=primary
+      80 15:32:22 200 backend=B edge=primary
+      81 15:32:23 200 backend=A edge=primary
+      82 15:32:23 200 backend=B edge=primary
+      83 15:32:24 200 backend=A edge=primary
+      84 15:32:24 200 backend=B edge=primary
+      85 15:32:25 200 backend=A edge=primary
+      86 15:32:25 200 backend=B edge=primary
+      87 15:32:25 200 backend=A edge=primary
+      88 15:32:26 200 backend=B edge=primary
+      89 15:32:27 200 backend=A edge=primary
+      90 15:32:27 200 backend=B edge=primary
+      91 15:32:28 200 backend=A edge=primary
+      92 15:32:28 200 backend=B edge=primary
+      93 15:32:29 200 backend=A edge=primary
+      94 15:32:29 200 backend=B edge=primary
+      95 15:32:30 200 backend=A edge=primary
+      96 15:32:30 200 backend=B edge=primary
+      97 15:32:31 200 backend=A edge=primary
+      98 15:32:31 200 backend=B edge=primary
+      99 15:32:32 200 backend=A edge=primary
+      100 15:32:32 200 backend=B edge=primary
+      101 15:32:33 200 backend=A edge=primary
+      102 15:32:33 200 backend=B edge=primary
+      103 15:32:33 200 backend=A edge=primary
+      104 15:32:34 200 backend=B edge=primary
+      105 15:32:35 200 backend=A edge=primary
+      106 15:32:36 200 backend=B edge=primary
+
+=== Results ===
+    total requests: 106   failed (non-200): 0
+    while A was down: 40 requests, 40 served by B
+  [PASS] 0 failed requests during the whole test
+  [PASS] while A was down, 100% of requests were served by Backend B
+  [PASS] after A came back, round-robin uses A again
+  [PASS] after A came back, B still serves too
+    On Mac 2: grep ', 10.7.24.9' /opt/homebrew/var/log/nginx/team1_access.log   (retried requests)
+
+=== Single point of failure (Ext D question) ===
+    Backends are now redundant, but the EDGE (nginx on Mac 2) is still a single point of failure:
+    app.team1.test resolves only to 10.7.16.45; if Mac 2 or its nginx dies, every request fails
+    even though both backends are healthy. Mac 3 is a second SPOF in our 3-laptop design: it hosts
+    BOTH backends (and the backup DNS and the standby edge), so losing the laptop loses everything.
+    To remove the edge SPOF in production:
+      * Two edge nodes + VRRP (keepalived): both share one virtual IP; the backup takes the VIP
+        within ~1-3 s when the master stops sending VRRP adverts. DNS never changes.
+      * DNS round-robin / health-checked DNS (Route 53 failover records): publish both edge IPs
+        with a short TTL; clients retry the other IP. Slower (bounded by TTL + client caches).
+      * Managed cloud LB (AWS ALB, GCP LB): the provider runs the redundant edge fleet for you.
+    Ext E shows the manual, DNS-based version of this: moving traffic to a standby edge.
+
+=== RESULT: 4 passed, 0 failed (mode=lan) ===
